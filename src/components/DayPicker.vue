@@ -44,7 +44,7 @@ const isDisabled = (date: DateValue) => !available.value.has(date.toString())
 			color="neutral"
 			variant="outline"
 			aria-label="Día anterior con datos"
-			class="justify-center max-sm:size-11"
+			class="size-10 justify-center max-sm:size-11"
 			:disabled="index <= 0"
 			@click="move(-1)"
 		/>
@@ -55,7 +55,7 @@ const isDisabled = (date: DateValue) => !available.value.has(date.toString())
 				color="neutral"
 				variant="outline"
 				:label="formatShortDate(day)"
-				class="flex-1 justify-center max-sm:h-11 sm:w-44 sm:flex-none"
+				class="h-10 flex-1 justify-center max-sm:h-11 sm:w-44 sm:flex-none"
 			/>
 			<template #content>
 				<UCalendar
@@ -73,7 +73,7 @@ const isDisabled = (date: DateValue) => !available.value.has(date.toString())
 			color="neutral"
 			variant="outline"
 			aria-label="Día siguiente con datos"
-			class="justify-center max-sm:size-11"
+			class="size-10 justify-center max-sm:size-11"
 			:disabled="index >= days.length - 1"
 			@click="move(1)"
 		/>
