@@ -1,0 +1,22 @@
+import { shallowRef } from 'vue'
+import { loadPax } from '../data/load'
+import type { PaxRow } from '../data/types'
+
+/**
+ * Loads the dataset once and exposes it as reactive state.
+ *
+ * shallowRef instead of ref: Vue then only tracks replacing `.value`, instead of
+ * wrapping each of the ~25k row objects in a reactive proxy we'd never mutate.
+ */
+export function usePaxData() {
+	const rows = shallowRef<PaxRow[]>([])
+	const loading = shallowRef(true)
+	const error = shallowRef<Error>()
+
+	loadPax()
+		.then(data => { rows.value = data })
+		.catch((e: unknown) => { error.value = e instanceof Error ? e : new Error(String(e)) })
+		.finally(() => { loading.value = false })
+
+	return { rows, loading, error }
+}

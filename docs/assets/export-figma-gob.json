@@ -1,0 +1,1379 @@
+[
+  {
+    "Border Radius": {
+      "modes": {
+        "Mode 1": {
+          "Border-radius-xl": {
+            "$scopes": [
+              "CORNER_RADIUS"
+            ],
+            "$type": "float",
+            "$value": 24
+          },
+          "Border-radius-l": {
+            "$scopes": [
+              "CORNER_RADIUS"
+            ],
+            "$type": "float",
+            "$value": 16
+          },
+          "Border-radius-m": {
+            "$scopes": [
+              "CORNER_RADIUS"
+            ],
+            "$type": "float",
+            "$value": 8
+          },
+          "Border-radius-s": {
+            "$scopes": [
+              "CORNER_RADIUS"
+            ],
+            "$type": "float",
+            "$value": 4
+          },
+          "Border-radius-0": {
+            "$scopes": [
+              "CORNER_RADIUS"
+            ],
+            "$type": "float",
+            "$value": 0
+          }
+        }
+      }
+    }
+  },
+  {
+    "Colores": {
+      "modes": {
+        "Light": {
+          "Link": {
+            "Active": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#373737"
+            },
+            "Visited": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#4c2c92"
+            },
+            "Hover": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#003078"
+            },
+            "Default": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#1d70b8"
+            }
+          },
+          "Contrast": {
+            "Base": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#625af6"
+            },
+            "Light": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#d8d7fa"
+            }
+          },
+          "VisualizaciónData": {
+            "Divergente": {
+              "Graph-11": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#9d0024"
+              },
+              "Graph-10": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#dc2d2a"
+              },
+              "Graph-09": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#f97145"
+              },
+              "Graph-08": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#ffaa5c"
+              },
+              "Graph-07": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#ffd581"
+              },
+              "Graph-06": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#e8eac5"
+              },
+              "Graph-05": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#b9e1ee"
+              },
+              "Graph-04": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#88c3dc"
+              },
+              "Graph-03": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#5d9bc7"
+              },
+              "Graph-02": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#3a6eae"
+              },
+              "Graph-01": {
+                "$scopes": [
+                  "FRAME_FILL",
+                  "SHAPE_FILL",
+                  "TEXT_FILL",
+                  "STROKE_COLOR"
+                ],
+                "$type": "color",
+                "$value": "#294090"
+              }
+            },
+            "Cualitativa(Grupofijo)": {
+              "Graph-04": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#d7bffa"
+              },
+              "Graph-03": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#009d9a"
+              },
+              "Graph-02": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#6929c4"
+              },
+              "Graph-01": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#000070"
+              }
+            },
+            "Cualitativa": {
+              "Secuencial": {
+                "Graph-10": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#edf5ff"
+                },
+                "Graph-09": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#d0e2ff"
+                },
+                "Graph-08": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#a6c8ff"
+                },
+                "Graph-07": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#78a9ff"
+                },
+                "Graph-06": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#4589ff"
+                },
+                "Graph-05": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#0f62fe"
+                },
+                "Graph-04": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#0043ce"
+                },
+                "Graph-03": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#002d9c"
+                },
+                "Graph-02": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#001d6c"
+                },
+                "Graph-01": {
+                  "$scopes": [
+                    "ALL_SCOPES"
+                  ],
+                  "$type": "color",
+                  "$value": "#001141"
+                }
+              },
+              "Graph-18": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#d7bffa"
+              },
+              "Graph-17": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#bdfdc8"
+              },
+              "Graph-16": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#fefacd"
+              },
+              "Graph-15": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#f9d9b6"
+              },
+              "Graph-14": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#f1c0d3"
+              },
+              "Graph-13": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#dd45df"
+              },
+              "Graph-12": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#a56eff"
+              },
+              "Graph-11": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#4a62d1"
+              },
+              "Graph-10": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#70d1f0"
+              },
+              "Graph-09": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#61b258"
+              },
+              "Graph-08": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#c9ee63"
+              },
+              "Graph-07": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#fae250"
+              },
+              "Graph-06": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#d3354f"
+              },
+              "Graph-05": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#000070"
+              },
+              "Graph-04": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#009d9a"
+              },
+              "Graph-03": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#198038"
+              },
+              "Graph-02": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#6929c4"
+              },
+              "Graph-01": {
+                "$scopes": [
+                  "ALL_SCOPES"
+                ],
+                "$type": "color",
+                "$value": "#fa4d56"
+              }
+            }
+          },
+          "Dark": {
+            "Lighten-5": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#8596b6"
+            },
+            "Lighten-4": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#6b7c9c"
+            },
+            "Lighten-3": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#526381"
+            },
+            "Lighten-2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#3a4c68"
+            },
+            "Lighten-1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#223550"
+            },
+            "Darken-2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#00000f"
+            },
+            "Darken-1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#000824"
+            },
+            "Base": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#092039"
+            }
+          },
+          "Gris": {
+            "5": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#f2f2f2"
+            },
+            "10": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#e6e6e6"
+            },
+            "20": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#cccccc"
+            },
+            "30": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#b3b3b3"
+            },
+            "40": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#999999"
+            },
+            "50": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#808080"
+            },
+            "60": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#666666"
+            },
+            "70": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#4d4d4d"
+            },
+            "80": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#333333"
+            },
+            "90": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#1a1a1a"
+            }
+          },
+          "Focus": {
+            "Text": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#373737"
+            },
+            "Base": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#ffbe5c"
+            }
+          },
+          "Exito": {
+            "Lighten-5": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#e8f5e9"
+            },
+            "Lighten-4": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#c8e6c9"
+            },
+            "Lighten-3": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#a5d6a7"
+            },
+            "Lighten-2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#81c784"
+            },
+            "Lighten-1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#66bb6a"
+            },
+            "Darken-4": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#1b5e20"
+            },
+            "Darken-3": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#2e7d32"
+            },
+            "Darken-2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#388e3c"
+            },
+            "Darken-1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#43a047"
+            },
+            "Base": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#4caf50"
+            }
+          },
+          "Advertencia": {
+            "Lighten-5": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#fbe9e7"
+            },
+            "Lighten-4": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#ffccbc"
+            },
+            "Lighten-3": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#ffab91"
+            },
+            "Lighten-2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#ff8a65"
+            },
+            "Lighten-1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#ff7043"
+            },
+            "Darken-4": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#bf360c"
+            },
+            "Darken-3": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#d84315"
+            },
+            "Darken-2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#e64a19"
+            },
+            "Darken-1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#f4511e"
+            },
+            "Base": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#ff5722"
+            }
+          },
+          "Info": {
+            "Lighten-5": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#e3f2fd"
+            },
+            "Lighten-4": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#bbdefb"
+            },
+            "Lighten-3": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#90caf9"
+            },
+            "Lighten-2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#64b5f6"
+            },
+            "Lighten-1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#42a5f5"
+            },
+            "Darken-4": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#0d47a1"
+            },
+            "Darken-3": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#1565c0"
+            },
+            "Darken-2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#1976d2"
+            },
+            "Darken-1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#1e88e5"
+            },
+            "Base": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#2196f3"
+            }
+          },
+          "Error": {
+            "Lighten-5": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#ffebef"
+            },
+            "Lighten-4": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#ffcdd2"
+            },
+            "Lighten-3": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#f2999c"
+            },
+            "Lighten-2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#e97175"
+            },
+            "Lighten-1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#f54e53"
+            },
+            "Darken-4": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#be0a1f"
+            },
+            "Darken-3": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#cd1e2c"
+            },
+            "Darken-2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#d32f2f"
+            },
+            "Darken-1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#ec313a"
+            },
+            "Base": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#fb3b3b"
+            }
+          },
+          "Blanco": {
+            "White-78%": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "rgba(255, 255, 255, 0.78)"
+            },
+            "White-26%": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "rgba(255, 255, 255, 0.26)"
+            },
+            "Base": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#ffffff"
+            }
+          },
+          "Negro": {
+            "Black-54%": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "rgba(0, 0, 0, 0.54)"
+            },
+            "Black-87%": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "rgba(0, 0, 0, 0.87)"
+            },
+            "Black-12%": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "rgba(0, 0, 0, 0.12)"
+            },
+            "Black-26%": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "rgba(0, 0, 0, 0.26)"
+            },
+            "Text": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#373737"
+            },
+            "Base": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#111111"
+            }
+          },
+          "Secundario": {
+            "Darken-3": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#7e8fa0"
+            },
+            "Darken-2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#98aabb"
+            },
+            "Darken-1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#b3c5d7"
+            },
+            "Lighten-1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#ebfeff"
+            },
+            "Base": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#cfe1f3"
+            }
+          },
+          "Primario": {
+            "Darken-4": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#00135a"
+            },
+            "Darken-3": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#002673"
+            },
+            "Darken-2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#003b8d"
+            },
+            "Darken-1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#0051a8"
+            },
+            "Base": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#0f69c4"
+            },
+            "Lighten-1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#4282e0"
+            },
+            "Lighten-2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#649cfd"
+            },
+            "Lighten-3": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#83b6ff"
+            },
+            "Lighten-4": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#a1d2ff"
+            },
+            "Lighten-5": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#bfeeff"
+            }
+          },
+          "Accent": {
+            "Darken-4": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#c82018"
+            },
+            "Darken-3": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#d72c25"
+            },
+            "Darken-2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#e4332c"
+            },
+            "Darken-1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#f63e32"
+            },
+            "Lighten-5": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#ffecef"
+            },
+            "Lighten-4": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#ffcfd3"
+            },
+            "Lighten-1": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#ff584f"
+            },
+            "Lighten-3": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#fa9e9b"
+            },
+            "Lighten-2": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#f37874"
+            },
+            "Base": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$value": "#ff4731"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "Colores especificos": {
+      "modes": {
+        "Light": {
+          "Color Button": {
+            "color-bk-button-default": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$libraryName": "",
+              "$collectionName": "Colores",
+              "$value": "{Primario.Darken-1}"
+            },
+            "color-bk-button-hover": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$libraryName": "",
+              "$collectionName": "Colores",
+              "$value": "{Primario.Darken-2}"
+            },
+            "color-text-button-default": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$libraryName": "",
+              "$collectionName": "Colores",
+              "$value": "{Blanco.Base}"
+            }
+          },
+          "Color Text": {
+            "color-text": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$libraryName": "",
+              "$collectionName": "Colores",
+              "$value": "{Negro.Text}"
+            },
+            "color-text-link": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$libraryName": "",
+              "$collectionName": "Colores",
+              "$value": "{Link.Default}"
+            }
+          }
+        },
+        "Dark": {
+          "Color Button": {
+            "color-bk-button-default": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$libraryName": "",
+              "$collectionName": "Colores",
+              "$value": "{Contrast.Base}"
+            },
+            "color-bk-button-hover": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$libraryName": "",
+              "$collectionName": "Colores",
+              "$value": "{Primario.Darken-2}"
+            },
+            "color-text-button-default": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$libraryName": "",
+              "$collectionName": "Colores",
+              "$value": "{Blanco.Base}"
+            }
+          },
+          "Color Text": {
+            "color-text": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$libraryName": "",
+              "$collectionName": "Colores",
+              "$value": "{Blanco.Base}"
+            },
+            "color-text-link": {
+              "$scopes": [
+                "ALL_SCOPES"
+              ],
+              "$type": "color",
+              "$libraryName": "",
+              "$collectionName": "Colores",
+              "$value": "{Contrast.Light}"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "ColorsCU": {
+      "modes": {
+        "Default": {
+          "background-button": {
+            "$scopes": [
+              "ALL_SCOPES"
+            ],
+            "$hiddenFromPublishing": true,
+            "$type": "color",
+            "$value": "{Primario.Darken-1}"
+          },
+          "icon-text-button": {
+            "$scopes": [
+              "ALL_SCOPES"
+            ],
+            "$hiddenFromPublishing": true,
+            "$type": "color",
+            "$value": "{Blanco.Base}"
+          },
+          "focus-button": {
+            "$scopes": [
+              "ALL_SCOPES"
+            ],
+            "$hiddenFromPublishing": true,
+            "$type": "color",
+            "$value": "{Focus.Base}"
+          }
+        },
+        "HighContrast": {
+          "background-button": {
+            "$scopes": [
+              "ALL_SCOPES"
+            ],
+            "$hiddenFromPublishing": true,
+            "$type": "color",
+            "$libraryName": "",
+            "$collectionName": "Colores",
+            "$value": "{Contrast.Base}"
+          },
+          "icon-text-button": {
+            "$scopes": [
+              "ALL_SCOPES"
+            ],
+            "$hiddenFromPublishing": true,
+            "$type": "color",
+            "$value": "{Blanco.Base}"
+          },
+          "focus-button": {
+            "$scopes": [
+              "ALL_SCOPES"
+            ],
+            "$hiddenFromPublishing": true,
+            "$type": "color",
+            "$libraryName": "",
+            "$collectionName": "Colores",
+            "$value": "{Contrast.Light}"
+          }
+        }
+      }
+    }
+  },
+  {
+    "Spacing (Espaciado)": {
+      "modes": {
+        "Mode 1": {
+          "spacing-xxl": {
+            "$scopes": [
+              "GAP"
+            ],
+            "$type": "float",
+            "$value": 62
+          },
+          "spacing-xl": {
+            "$scopes": [
+              "GAP"
+            ],
+            "$type": "float",
+            "$value": 48
+          },
+          "spacing-l": {
+            "$scopes": [
+              "GAP"
+            ],
+            "$type": "float",
+            "$value": 36
+          },
+          "spacing-m": {
+            "$scopes": [
+              "GAP"
+            ],
+            "$type": "float",
+            "$value": 24
+          },
+          "spacing-s": {
+            "$scopes": [
+              "GAP"
+            ],
+            "$type": "float",
+            "$value": 16
+          },
+          "spacing-xs": {
+            "$scopes": [
+              "GAP"
+            ],
+            "$type": "float",
+            "$value": 8
+          },
+          "spacing-xxs": {
+            "$scopes": [
+              "GAP"
+            ],
+            "$type": "float",
+            "$value": 4
+          }
+        }
+      }
+    }
+  },
+  {
+    "Tamaños": {
+      "modes": {
+        "Mode 1": {
+          "Size-xxl": {
+            "$scopes": [
+              "WIDTH_HEIGHT"
+            ],
+            "$type": "float",
+            "$value": 64
+          },
+          "Size-xl": {
+            "$scopes": [
+              "WIDTH_HEIGHT"
+            ],
+            "$type": "float",
+            "$value": 48
+          },
+          "Size-l": {
+            "$scopes": [
+              "WIDTH_HEIGHT"
+            ],
+            "$type": "float",
+            "$value": 36
+          },
+          "Size-m": {
+            "$scopes": [
+              "WIDTH_HEIGHT"
+            ],
+            "$type": "float",
+            "$value": 24
+          },
+          "Size-s": {
+            "$scopes": [
+              "WIDTH_HEIGHT"
+            ],
+            "$type": "float",
+            "$value": 16
+          },
+          "Size-xs": {
+            "$scopes": [
+              "WIDTH_HEIGHT"
+            ],
+            "$type": "float",
+            "$value": 8
+          },
+          "Size-xxs": {
+            "$scopes": [
+              "WIDTH_HEIGHT"
+            ],
+            "$type": "float",
+            "$value": 4
+          }
+        }
+      }
+    }
+  }
+]

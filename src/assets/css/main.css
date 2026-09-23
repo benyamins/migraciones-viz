@@ -1,0 +1,31 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+/*
+  Tokens from docs/assets/figma-variables-gobcl-en.css, namespaced as `gob`.
+  Don't import that file directly: its --color-gray-50 (#808080) would override
+  Tailwind's gray-50 (#f9fafb), and several other names collide the same way.
+*/
+@theme static {
+  --font-sans: "Public Sans Variable", system-ui, sans-serif;
+
+  /* primary scale; 500 = primary-base. 50 is derived (the tokens have no near-white step) */
+  --color-gob-50: #eef5fc;
+  --color-gob-100: #cfe1f3;
+  --color-gob-200: #a1d2ff;
+  --color-gob-300: #83b6ff;
+  --color-gob-400: #4282e0;
+  --color-gob-500: #0f69c4;
+  --color-gob-600: #0051a8;
+  --color-gob-700: #003b8d;
+  --color-gob-800: #002673;
+  --color-gob-900: #00135a;
+  --color-gob-950: #092039;
+
+  --color-gob-red: #e4332c;
+}
+
+/* native scrollbars and form controls follow the theme */
+.dark {
+  color-scheme: dark;
+}
