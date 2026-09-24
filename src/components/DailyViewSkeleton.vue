@@ -12,7 +12,7 @@ import ChartSkeleton from './ChartSkeleton.vue'
 		<span class="sr-only">Cargando datos…</span>
 		<section aria-hidden="true" class="border-y border-default bg-default shadow-xs sm:rounded-lg sm:border-x">
 			<div class="flex flex-wrap items-start justify-between gap-x-8 gap-y-5 border-b border-default p-4 sm:p-6">
-				<div class="flex w-full items-start justify-between gap-4 lg:w-auto">
+				<div class="flex w-full flex-wrap items-start justify-between gap-4 lg:w-auto">
 					<div>
 						<USkeleton class="h-4 w-24" />
 						<USkeleton class="mt-1 h-7 w-28" />

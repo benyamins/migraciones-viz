@@ -54,7 +54,8 @@ const tabsUi = { trigger: 'h-8 max-sm:h-9' }
 	>
 		<!-- Title and filters, separated from the results by a divider -->
 		<div class="flex flex-wrap items-start justify-between gap-x-8 gap-y-5 border-b border-default p-4 sm:p-6">
-			<div class="flex w-full items-start justify-between gap-4 lg:w-auto">
+			<!-- flex-wrap: on very narrow phones (under ~350px) the view switch drops below the title -->
+			<div class="flex w-full flex-wrap items-start justify-between gap-4 lg:w-auto">
 				<div>
 					<p class="text-xs font-bold tracking-widest text-primary uppercase">Vista diaria</p>
 					<h2 id="daily-title" class="mt-1 text-xl font-bold text-highlighted">{{ PROCESOS[tipo] }}</h2>
