@@ -1,6 +1,6 @@
 export type Tipo = 'llegada' | 'salida'
 
-/** One 10-minute segment for one direction, as written by scripts/prepare.sql. */
+/** One 10-minute segment for one direction, as returned by loadPax (src/data/load.ts). */
 export interface PaxRow {
 	/** Local wall-clock time 'YYYY-MM-DDTHH:MM:SS', deliberately without a time zone. */
 	dt_segmento: string

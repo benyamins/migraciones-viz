@@ -13,6 +13,13 @@ export default defineConfig({
         // `gob` is defined in src/assets/css/main.css from the gob.cl tokens
         colors: { primary: 'gob', neutral: 'slate' },
       },
+      // Size (CSS 27 KB -> 12 KB gzipped): generate theme styles only for the color aliases
+      // the app uses (neutral is always there) and only for the components it uses
+      theme: { colors: ['primary', 'error'] },
+      experimental: { componentDetection: true },
+      // Icons come from our own subset (src/assets/icons.json, registered in src/main.ts);
+      // without this, Nuxt UI would also bundle its 43 default icons
+      icon: { clientBundle: false },
     }),
   ],
   build: {
