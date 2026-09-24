@@ -4,6 +4,9 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Relative asset URLs: the same build works at a domain's root and under /migraciones-viz/
+  // on github.io. Safe because this is a single page without client-side routes.
+  base: './',
   plugins: [
     vue(),
     ui({
