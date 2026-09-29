@@ -146,7 +146,7 @@ const option = computed<EChartsOption>(() => {
 		aria: {
 			enabled: true,
 			label: {
-				description: `Casetas por intervalo de 10 minutos, ${props.proceso}, ${formatLongDate(props.day)}. Series: ${series.map(s => s.name).join(', ')}.`,
+				description: `Proyección de casetas por intervalo de 10 minutos, ${props.proceso}, ${formatLongDate(props.day)}. Series: ${series.map(s => s.name).join(', ')}.`,
 			},
 		},
 		textStyle: { fontFamily: FONT },

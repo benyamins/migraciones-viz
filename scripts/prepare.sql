@@ -19,12 +19,13 @@ FROM
     )
 ;
 
--- Size choices (78 KB -> 47 KB for the three months of 2026):
+-- Size choices (measured on Feb, Apr and Sep 2026: 78 KB -> 47 KB):
 -- - ORDER BY tipo first: each process's series is contiguous, so neighboring values are similar
 -- - PARQUET_VERSION v2: allows delta encodings (each value stored as the difference to the previous)
 -- - DICTIONARY_SIZE_LIMIT 1000: dictionary encoding only for columns with up to 1000 distinct values
 --   (tipo, booth counts); pax and dt_segmento have more, and compress better as deltas
 -- - COMPRESSION_LEVEL 22: ZSTD's maximum; slower to write, just as fast to read
+-- KV_METADATA stores when this ran (UTC) in the file's footer; the site shows it as "Datos actualizados".
 COPY (
     SELECT * FROM viz_data ORDER BY tipo, dt_segmento
 )
@@ -35,4 +36,5 @@ TO 'public/data/pax.parquet'
     ,COMPRESSION_LEVEL 22
     ,PARQUET_VERSION v2
     ,DICTIONARY_SIZE_LIMIT 1000
+    ,KV_METADATA {actualizado: strftime(timezone('UTC', now()), '%Y-%m-%dT%H:%M:%SZ')}
 );
