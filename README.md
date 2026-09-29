@@ -1,5 +1,32 @@
-# Vue 3 + TypeScript + Vite
+# Test Dashboard
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+To make it work:
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## Requirements
+
+Use `mise` for deps.
+
+```
+mise use -g duckdb pnpm
+```
+1. install dependencies
+```bash
+pnpm install
+```
+
+2. update the data.
+```bash
+duckdb -c ".read ./scripts/prepare.sql"
+```
+
+3. test the proyect
+```bash
+pnpm dev
+```
+
+4. build the proyect
+```bash
+pnpm build
+```
+
+5. push to main to let the github workflow start.
