@@ -27,3 +27,23 @@
 .dark {
   color-scheme: dark;
 }
+
+/*
+  Heatmap classes (src/lib/heat.ts): one teal ramp, the hue of the passengers on the Casetas
+  chart (IBM Carbon's teal, where #009d9a comes from). Light mode goes light → dark; dark mode
+  has its own steps, dark → light, checked against the dark card. Steps are evenly spaced in
+  lightness (OKLab). The lowest class recedes toward the card on purpose: it means few passengers.
+  --heat-ink is the text on each step, at 4.5:1 or more.
+*/
+.heat-0 { --heat: #9ef0f0; --heat-ink: #0f172a; }
+.heat-1 { --heat: #3ddbd9; --heat-ink: #0f172a; }
+.heat-2 { --heat: #08bdba; --heat-ink: #0f172a; }
+.heat-3 { --heat: #009d9a; --heat-ink: #0f172a; }
+.heat-4 { --heat: #007d79; --heat-ink: #fff; }
+.heat-5 { --heat: #005d5d; --heat-ink: #fff; }
+.dark .heat-0 { --heat: #004144; --heat-ink: #fff; }
+.dark .heat-1 { --heat: #005d5d; --heat-ink: #fff; }
+.dark .heat-2 { --heat: #007d79; --heat-ink: #fff; }
+.dark .heat-3 { --heat: #009d9a; --heat-ink: #0f172a; }
+.dark .heat-4 { --heat: #08bdba; --heat-ink: #0f172a; }
+.dark .heat-5 { --heat: #3ddbd9; --heat-ink: #0f172a; }

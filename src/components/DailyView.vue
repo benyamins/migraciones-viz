@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { today } from '@internationalized/date'
 import { computed, defineAsyncComponent, ref, watch } from 'vue'
-import { formatLongDate, groupByDay } from '../data/days'
-import { PROCESOS, type PaxRow, type Tipo } from '../data/types'
+import { readQuery, writeQuery } from '../composables/urlQuery'
+import { defaultDay, formatLongDate, groupByDay } from '../data/days'
+import { isTipo, PROCESOS, type PaxRow, type Tipo } from '../data/types'
+import { TABS_UI } from '../lib/controls'
 import ChartSkeleton from './ChartSkeleton.vue'
 import DayPicker from './DayPicker.vue'
 import HourlyTable from './HourlyTable.vue'
@@ -20,18 +21,23 @@ const props = defineProps<{ rows: PaxRow[] }>()
 const byDay = computed(() => groupByDay(props.rows))
 const days = computed(() => [...byDay.value.keys()].sort())
 
-// Local UI state.
-const tipo = ref<Tipo>('llegada')
+// Local UI state. The process and the day can come from the URL (links from the index).
+const urlTipo = readQuery('proceso')
+const tipo = ref<Tipo>(isTipo(urlTipo) ? urlTipo : 'llegada')
 const day = ref('')
 /** Below `lg` only one of chart/table is shown at a time; wide screens show both. */
 const view = ref<'chart' | 'table'>('chart')
 
-// Choose a default day once the days are known: today (in Chile) if it has data, else the latest day.
+// Choose the day once the days are known: the URL's, else today's or the latest (see defaultDay).
 watch(days, list => {
-	if (list.includes(day.value)) return
-	const now = today('America/Santiago').toString()
-	day.value = list.includes(now) ? now : list[list.length - 1] ?? ''
+	if (!list.includes(day.value)) day.value = defaultDay(list, readQuery('fecha'))
 }, { immediate: true })
+
+// Keep the user's choices in the URL. Not the first default day: a link saved without a date
+// keeps opening today's.
+watch([day, tipo], ([newDay, newTipo], [oldDay]) => {
+	if (oldDay) writeQuery({ fecha: newDay, proceso: newTipo })
+})
 
 const dayRows = computed(() =>
 	(byDay.value.get(day.value) ?? []).filter(row => row.tipo === tipo.value),
@@ -42,8 +48,6 @@ const viewTabs = [
 	{ label: 'Gráfico', value: 'chart', icon: 'i-lucide-chart-line' },
 	{ label: 'Tabla', value: 'table', icon: 'i-lucide-table' },
 ]
-// Every control is 40px tall (44px on phones, for thumbs). USWDS: don't mix control sizes in a row.
-const tabsUi = { trigger: 'h-8 max-sm:h-9' }
 </script>
 
 <template>
@@ -62,14 +66,14 @@ const tabsUi = { trigger: 'h-8 max-sm:h-9' }
 					<!-- on phones the date picker below already shows the date -->
 					<p v-if="day" class="mt-0.5 text-sm text-muted max-sm:hidden">{{ formatLongDate(day) }}</p>
 				</div>
-				<UTabs v-model="view" :items="viewTabs" :content="false" :ui="tabsUi" class="lg:hidden" />
+				<UTabs v-model="view" :items="viewTabs" :content="false" :ui="TABS_UI" class="lg:hidden" />
 			</div>
 
 			<!-- USWDS forms: related controls in a fieldset, with a visible legend as the label -->
 			<div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:gap-6">
 				<fieldset>
 					<legend class="mb-1.5 text-sm font-medium text-toned">Proceso</legend>
-					<UTabs v-model="tipo" :items="tipoTabs" :content="false" :ui="tabsUi" />
+					<UTabs v-model="tipo" :items="tipoTabs" :content="false" :ui="TABS_UI" />
 				</fieldset>
 				<fieldset v-if="day">
 					<legend class="mb-1.5 text-sm font-medium text-toned">Fecha</legend>

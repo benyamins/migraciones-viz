@@ -25,7 +25,13 @@ const integer = new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 })
 			space reserved so it never covers the numbers). Phones: the page scrolls, and the
 			sticky header stays at the top of the screen.
 		-->
-		<div class="min-h-0 flex-1 lg:overflow-y-auto lg:[scrollbar-gutter:stable] lg:[scrollbar-width:thin]">
+		<!-- tabindex: keyboard users can focus it to scroll it -->
+		<div
+			tabindex="0"
+			role="group"
+			aria-labelledby="hourly-title"
+			class="min-h-0 flex-1 rounded-xs focus-visible:outline-2 focus-visible:outline-primary lg:overflow-y-auto lg:[scrollbar-gutter:stable] lg:[scrollbar-width:thin]"
+		>
 			<!-- Following USWDS tables: caption, scoped headers, right-aligned tabular numbers, sticky header -->
 			<table class="w-full text-sm tabular-nums">
 				<caption class="sr-only">Resumen por hora: pasajeros totales y máximo de casetas de cada hora</caption>

@@ -1,16 +1,40 @@
+import { basename } from 'node:path'
 import ui from '@nuxt/ui/vite'
 import vue from '@vitejs/plugin-vue'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
+import { APP_NAME, PAGES } from './src/site.ts'
+
+const pages = Object.values(PAGES)
+
+/** Adds each page's tab title and description, from src/site.ts, to its HTML file. */
+function pageMeta(): Plugin {
+  return {
+    name: 'page-meta',
+    transformIndexHtml(_html, { filename }) {
+      const page = pages.find(p => p.file === basename(filename))
+      if (!page) throw new Error(`${basename(filename)} is not in PAGES (src/site.ts)`)
+      return [
+        { tag: 'title', children: `${page.title} · ${APP_NAME}`, injectTo: 'head' },
+        { tag: 'meta', attrs: { name: 'description', content: page.description }, injectTo: 'head' },
+      ]
+    },
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig({
   // Relative asset URLs: the same build works at a domain's root and under /migraciones-viz/
-  // on github.io. Safe because this is a single page without client-side routes.
+  // on github.io. Safe because every page sits in the root folder, without client-side routes.
   base: './',
+  // One HTML file per page (a multi-page app). GitHub Pages serves casetas.html at /casetas.
+  input: pages.map(page => page.file),
+  // No fallback to index.html: an unknown URL is a 404 in dev too, as on GitHub Pages
+  appType: 'mpa',
   plugins: [
     vue(),
+    pageMeta(),
     ui({
-      // single page: links render as plain <a>, no vue-router needed
+      // no client-side routes: links render as plain <a>, no vue-router needed
       router: false,
       ui: {
         // `gob` is defined in src/assets/css/main.css from the gob.cl tokens

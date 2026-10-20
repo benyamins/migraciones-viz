@@ -5,6 +5,7 @@ import { computed, ref } from 'vue'
 import { formatLongDate, formatTime, wallClockToMs } from '../data/days'
 import type { PaxRow } from '../data/types'
 import { CHART_THEME, type ColorMode } from '../lib/chartTheme'
+import { dayAxis, FONT, tooltipStyle } from '../lib/dayChart'
 import type { EChartsOption, TooltipComponentFormatterCallbackParams } from '../lib/echarts'
 import EChart from './EChart.vue'
 
@@ -44,15 +45,12 @@ const PAX = {
 	fill: { light: 'rgba(0, 157, 154, 0.14)', dark: 'rgba(45, 212, 191, 0.16)' },
 }
 
-const HOUR = 3_600_000
-const FONT = '"Public Sans Variable", system-ui, sans-serif'
-
 // Follows the `dark` class Nuxt UI's color mode toggle puts on <html>.
 const isDark = useDark()
 const mode = computed<ColorMode>(() => isDark.value ? 'dark' : 'light')
 
-/** Passengers on a second y axis. Off by default so the chart stays about booths. */
-const showPax = ref(false)
+/** Passengers on a second y axis. On by default: the booths follow the passengers. */
+const showPax = ref(true)
 
 const integer = new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 })
 
@@ -82,14 +80,6 @@ function tooltip(params: TooltipComponentFormatterCallbackParams): string {
 // and EChart.vue's watch then pushes the new object into the chart.
 const option = computed<EChartsOption>(() => {
 	const theme = CHART_THEME[mode.value]
-	const start = wallClockToMs(`${props.day}T00:00:00`)
-	const end = start + 24 * HOUR
-
-	/** Label formatter that prints every `hours`-th hour (ticks and grid lines stay hourly). */
-	const labelEvery = (hours: number) => (value: number) => {
-		if (Math.round((value - start) / HOUR) % hours) return ''
-		return value === end ? '24:00' : formatTime(value)
-	}
 
 	const yAxis: YAXisComponentOption[] = [{
 		type: 'value',
@@ -152,40 +142,11 @@ const option = computed<EChartsOption>(() => {
 		textStyle: { fontFamily: FONT },
 		animationDurationUpdate: 300,
 		grid: { left: 0, right: 8, top: 32, bottom: 0, containLabel: true },
-		tooltip: {
-			trigger: 'axis',
-			// keeps the tooltip inside the chart on narrow screens
-			confine: true,
-			formatter: tooltip,
-			padding: [8, 12],
-			backgroundColor: theme.tooltipBg,
-			borderColor: theme.tooltipBorder,
-			textStyle: { fontFamily: FONT, fontSize: 13, color: theme.tooltipText },
-			axisPointer: { lineStyle: { color: theme.pointer } },
-		},
-		xAxis: {
-			type: 'time',
-			min: start,
-			max: end,
-			// one tick and one grid line per hour
-			minInterval: HOUR,
-			maxInterval: HOUR,
-			axisLine: { lineStyle: { color: theme.axis } },
-			axisTick: { lineStyle: { color: theme.axis } },
-			axisLabel: { hideOverlap: true, color: theme.text, formatter: labelEvery(1) },
-			splitLine: { show: true, lineStyle: { color: theme.hourLine } },
-		},
+		tooltip: { ...tooltipStyle(theme), trigger: 'axis', formatter: tooltip },
+		// the same hourly x axis as SagChart
+		...dayAxis(props.day, theme),
 		yAxis,
 		series,
-		// Fewer hour labels on narrow charts. ECharts checks these against the chart's own
-		// width on every resize and applies all matching entries in order (narrowest wins).
-		// (Kept on the root option: wrapping the rest in `baseOption` triggers a bogus
-		// "timeline is used but not imported" warning in ECharts' dev build.)
-		media: [
-			{ query: { maxWidth: 960 }, option: { xAxis: { axisLabel: { formatter: labelEvery(2) } } } },
-			{ query: { maxWidth: 560 }, option: { xAxis: { axisLabel: { formatter: labelEvery(3) } } } },
-			{ query: { maxWidth: 400 }, option: { xAxis: { axisLabel: { formatter: labelEvery(4) } } } },
-		],
 	}
 })
 </script>

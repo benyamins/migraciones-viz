@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- The <title> and the description come from src/site.ts (see vite.config.ts) -->
+    <script>
+      // Apply the saved color mode before the first paint, so dark mode doesn't flash white
+      // while the app loads. Same storage key and values as VueUse's useDark (used by Nuxt UI).
+      try {
+        const mode = localStorage.getItem('vueuse-color-scheme') || 'auto'
+        if (mode === 'dark' || (mode === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark')
+        }
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <div id="app" class="isolate"></div>
+    <script type="module" src="/src/pages/casetas.ts"></script>
+  </body>
+</html>

@@ -1,3 +1,4 @@
+import { tenths, wholePax } from './pax'
 import type { PaxRow } from './types'
 
 export interface HourSummary {
@@ -20,18 +21,18 @@ export function summarizeByHour(rows: PaxRow[]): HourSummary[] {
 		if (!summary) {
 			hours.set(hour, {
 				hour,
-				pax: row.pax,
+				pax: tenths(row.pax),
 				pdi_npu: row.pdi_npu,
 				cap_percentil_75: row.cap_percentil_75,
 				cap_aplanada: row.cap_aplanada,
 			})
 			continue
 		}
-		summary.pax += row.pax
+		summary.pax += tenths(row.pax)
 		summary.pdi_npu = Math.max(summary.pdi_npu, row.pdi_npu)
 		summary.cap_percentil_75 = Math.max(summary.cap_percentil_75, row.cap_percentil_75)
 		summary.cap_aplanada = Math.max(summary.cap_aplanada, row.cap_aplanada)
 	}
-	// round once at the end so the 1-decimal pax values don't accumulate rounding errors
-	return [...hours.values()].map(summary => ({ ...summary, pax: Math.round(summary.pax) }))
+	// pax adds up whole tenths (see pax.ts) and is rounded once at the end
+	return [...hours.values()].map(summary => ({ ...summary, pax: wholePax(summary.pax) }))
 }
