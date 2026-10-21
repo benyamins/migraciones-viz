@@ -1,6 +1,10 @@
-# Builds the site and publishes it on GitHub Pages on every push to main.
-# One-time setup: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+# Builds the site and publishes it on GitHub Pages on every push to main. The same file runs in two
+# repos: jac-mtt/dashboard-capacidad-amb (the official site) and benyamins/migraciones-viz (the test
+# site; its custom domain is set in its Pages settings, so the build needs no CNAME file).
+# One-time setup in each repo: Settings → Pages → Build and deployment → Source: "GitHub Actions".
 # public/data/pax.parquet is generated locally (scripts/prepare.sql) and committed; CI only builds.
+# Actions are pinned to full commit SHAs, as the jac-mtt organization requires. The comment after
+# each one is its version; to update one, use the commit of the new version's tag.
 name: Deploy to GitHub Pages
 
 on:
@@ -19,16 +23,16 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # pnpm version comes from "packageManager" in package.json
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 26 # same major as local development
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - uses: actions/upload-pages-artifact@v5
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: dist
 
@@ -44,4 +48,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

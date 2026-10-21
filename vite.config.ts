@@ -23,8 +23,9 @@ function pageMeta(): Plugin {
 
 // https://vite.dev/config/
 export default defineConfig({
-  // Relative asset URLs: the same build works at a domain's root and under /migraciones-viz/
-  // on github.io. Safe because every page sits in the root folder, without client-side routes.
+  // Relative asset URLs: the same build works at a domain's root (the test site) and under
+  // /dashboard-capacidad-amb/ on github.io (the official site). Safe because every page sits in
+  // the root folder, without client-side routes.
   base: './',
   // One HTML file per page (a multi-page app). GitHub Pages serves pdi.html at /pdi.
   input: pages.map(page => page.file),

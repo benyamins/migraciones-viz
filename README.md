@@ -1,7 +1,9 @@
 # Capacidad Nuevo Pudahuel
 
 Projected passengers, booths, and Aduanas y SAG channels and pórticos at Nuevo Pudahuel.
-Published on GitHub Pages at https://migraciones.rosebush.garden/.
+Published on GitHub Pages at https://jac-mtt.github.io/dashboard-capacidad-amb/ (repo
+`jac-mtt/dashboard-capacidad-amb`). The test site, https://migraciones.rosebush.garden/ (repo
+`benyamins/migraciones-viz`), runs the same code: push there first.
 
 ## Pages
 
@@ -48,7 +50,22 @@ pnpm dev
 pnpm build
 ```
 
-5. push to `main` to let the github workflow start.
+5. push `main` to the test repo, and check the test site, https://migraciones.rosebush.garden/
+```bash
+git push origin main
+```
+
+6. publish it: push `main` to the official repo
+```bash
+git push jac main
+```
+
+Each push starts that repo's GitHub workflow, which builds and publishes its site in about a
+minute. `origin` is the test repo, so a plain `git push` never publishes. Add the `jac` remote
+once per clone:
+```bash
+git remote add jac https://github.com/jac-mtt/dashboard-capacidad-amb.git
+```
 
 ## Data
 

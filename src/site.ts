@@ -11,7 +11,7 @@ export interface Page {
 	/** The page's HTML file, in the project root. */
 	file: string
 	/**
-	 * Relative link, so the site works at a domain's root and under /migraciones-viz/.
+	 * Relative link, so the site works at a domain's root and under /dashboard-capacidad-amb/.
 	 * GitHub Pages serves pdi.html at `pdi`. Never end a link with '/': GitHub Pages would
 	 * look for pdi/index.html and answer 404.
 	 */
