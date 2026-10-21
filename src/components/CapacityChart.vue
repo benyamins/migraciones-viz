@@ -19,20 +19,18 @@ const props = defineProps<{
 }>()
 
 interface SeriesDef {
-	key: 'pdi_npu' | 'cap_percentil_75' | 'cap_aplanada'
+	key: 'pdi_npu' | 'cap_aplanada'
 	name: string
 	/** gob.cl tokens; lighter steps in dark mode so the lines keep their contrast */
 	color: Record<ColorMode, string>
 	width: number
 	/** Each value holds until the next segment starts. */
 	step?: boolean
-	dashed?: boolean
 }
 
 // The order here is the legend and tooltip order.
 const SERIES: SeriesDef[] = [
 	{ key: 'pdi_npu', name: 'NPU/PDI', color: { light: '#6b7c9c', dark: '#8596b6' }, width: 1.5 },
-	{ key: 'cap_percentil_75', name: 'Percentil 75', color: { light: '#7e8fa0', dark: '#98aabb' }, width: 2, step: true, dashed: true },
 	{ key: 'cap_aplanada', name: 'Modelo aplanado', color: { light: '#003b8d', dark: '#83b6ff' }, width: 3, step: true },
 ]
 
@@ -98,7 +96,7 @@ const option = computed<EChartsOption>(() => {
 		step: s.step ? 'end' : false,
 		showSymbol: false,
 		color: s.color[mode.value],
-		lineStyle: { width: s.width, type: s.dashed ? 'dashed' : 'solid' },
+		lineStyle: { width: s.width },
 		data: props.rows.map(row => [wallClockToMs(row.dt_segmento), row[s.key]]),
 	}))
 
@@ -165,7 +163,7 @@ const option = computed<EChartsOption>(() => {
 				<li v-for="s in SERIES" :key="s.key" class="flex items-center gap-2">
 					<span
 						class="w-6"
-						:style="{ borderTop: `${Math.max(s.width, 2)}px ${s.dashed ? 'dashed' : 'solid'} ${s.color[mode]}` }"
+						:style="{ borderTop: `${Math.max(s.width, 2)}px solid ${s.color[mode]}` }"
 					/>
 					{{ s.name }}
 				</li>

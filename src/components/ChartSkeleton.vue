@@ -3,10 +3,10 @@
 defineOptions({ inheritAttrs: false })
 
 withDefaults(defineProps<{
-	/** Width of each legend item, in the chart's legend order. Default: CapacityChart's four. */
+	/** Width of each legend item, in the chart's legend order. Default: CapacityChart's three. */
 	legend?: string[]
 }>(), {
-	legend: () => ['w-48', 'w-22', 'w-28', 'w-36'],
+	legend: () => ['w-48', 'w-22', 'w-36'],
 })
 </script>
 

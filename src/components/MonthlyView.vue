@@ -36,7 +36,7 @@ watch(months, list => {
 	month.value = wanted && list.includes(wanted) ? wanted : list.includes(now) ? now : list[list.length - 1] ?? ''
 }, { immediate: true })
 
-// Keep the user's choices in the URL, as on Casetas (not the first default month)
+// Keep the user's choices in the URL, as on PDI (not the first default month)
 watch([month, tipo], ([newMonth, newTipo], [oldMonth]) => {
 	if (oldMonth) writeQuery({ mes: newMonth, proceso: newTipo })
 })
@@ -68,7 +68,7 @@ const viewTabs = [
 
 <template>
 	<!--
-		Edge to edge on phones, a rounded card from `sm` up, like Casetas. @container: the
+		Edge to edge on phones, a rounded card from `sm` up, like PDI. @container: the
 		heatmap's views depend on the card's width (@min-[81rem] and @max-[81rem]).
 	-->
 	<section
@@ -138,7 +138,7 @@ const viewTabs = [
 				<span aria-hidden="true" class="h-[3px] w-6 shrink-0 bg-(--ui-text-highlighted)" />
 				<span><span class="font-medium">Hora punta:</span> los 60 minutos seguidos con más pasajeros del día.</span>
 			</p>
-			<p class="mt-1 text-sm text-muted">Cada fecha lleva a sus casetas de ese día.</p>
+			<p class="mt-1 text-sm text-muted">Cada fecha lleva a ese día en PDI.</p>
 		</div>
 		<p v-else class="p-4 text-sm text-muted sm:p-6">No hay datos para mostrar.</p>
 	</section>

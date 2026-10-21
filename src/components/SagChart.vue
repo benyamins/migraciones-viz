@@ -14,12 +14,12 @@ import EChart from './EChart.vue'
 const props = defineProps<{
 	/** Arrival rows of a single day, in time order. */
 	rows: PaxRow[]
-	/** The same day by hour (summarizeSagByHour), for the 60 minutes behind each hour's channels. */
+	/** The same day by hour (summarizeSagByHour), for the 60 minutes behind each hour's counts. */
 	hours: SagHour[]
 	/** 'YYYY-MM-DD' */
 	day: string
-	/** Top of the channels axis: the largest channel count in the rules. */
-	maxChannels: number
+	/** Top of the left axis: the largest number of channels or pórticos in the rules. */
+	maxCount: number
 }>()
 
 interface ChannelDef {
@@ -29,7 +29,7 @@ interface ChannelDef {
 }
 
 // Stacked in this order: SC at the bottom, K9 on top (also the legend and tooltip order).
-// Two blues of the gob scale (blue means capacity, as on Casetas), SC the darker one in both modes.
+// Two blues of the gob scale (blue means capacity, as on PDI), SC the darker one in both modes.
 // Checked with the dataviz palette script: light and dark pairs are far apart for every color
 // vision (ΔE 24 or more). K9's light blue is under 3:1 on white, so the table shows the numbers.
 const CHANNELS: ChannelDef[] = [
@@ -37,7 +37,13 @@ const CHANNELS: ChannelDef[] = [
 	{ key: 'k9_channels', name: 'K9', color: { light: '#83b6ff', dark: '#83b6ff' } },
 ]
 
-// Passengers: the same teal as on Casetas. A line without the fill: a fill would hide behind the
+// Pórticos: a step line on the channels' axis, drawn over everything. Red from the gob.cl tokens
+// (accent darken-3 in light mode, data-qualitative-01 in dark mode), 4.9:1 on white and 5.3:1
+// on the dark card. The palette script puts it at ΔE 14.7 or more from the teal and the blues
+// for every color vision.
+const PORTICOS: Record<ColorMode, string> = { light: '#d72c25', dark: '#fa4d56' }
+
+// Passengers: the same teal as on PDI. A line without the fill: a fill would hide behind the
 // stack, or tint it. Its halo, in the card's color, keeps it readable where it crosses a blue.
 const PAX = {
 	text: { light: '#007a77', dark: '#5eead4' },
@@ -49,7 +55,7 @@ const SURFACE: Record<ColorMode, string> = { light: '#ffffff', dark: '#0f172a' }
 const isDark = useDark()
 const mode = computed<ColorMode>(() => isDark.value ? 'dark' : 'light')
 
-/** Passengers on a second y axis, on by default as on Casetas. */
+/** Passengers on a second y axis, on by default as on PDI. */
 const showPax = ref(true)
 
 const integer = new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 })
@@ -59,22 +65,27 @@ function count(value: unknown, one: string, many: string): string {
 	return `${integer.format(value)} ${value === 1 ? one : many}`
 }
 
+const UNITS: Record<string, [string, string]> = {
+	pax: ['pasajero', 'pasajeros'],
+	porticos: ['pórtico', 'pórticos'],
+}
+
 // ECharts inserts this HTML as-is. It's safe because series names are our own constants;
 // escape with echarts.format.encodeHTML if they ever come from the data.
 function tooltip(params: TooltipComponentFormatterCallbackParams): string {
-	const items = (Array.isArray(params) ? params : [params]).filter(item => item.seriesId !== 'pax-halo')
+	const items = (Array.isArray(params) ? params : [params]).filter(item => !String(item.seriesId).endsWith('-halo'))
 	const [time] = items[0].value as [number, number]
 	const lines = items.map(item => {
 		const [, value] = item.value as [number, number]
-		const text = item.seriesId === 'pax' ? count(value, 'pasajero', 'pasajeros') : count(value, 'canal', 'canales')
+		const [one, many] = UNITS[item.seriesId as string] ?? ['canal', 'canales']
 		return `<div class="flex items-center gap-2 leading-6">
 			<span class="size-2.5 shrink-0 rounded-full" style="background:${item.color}"></span>
 			<span class="flex-1 pr-6">${item.seriesName}</span>
-			<b class="text-highlighted tabular-nums">${text}</b>
+			<b class="text-highlighted tabular-nums">${count(value, one, many)}</b>
 		</div>`
 	})
-	// The 60 minutes that set this hour's channels (scripts/prepare.sql, step 4). The point at
-	// 24:00 only closes the last step, so it belongs to 23:00.
+	// The 60 minutes that set this hour's channels and pórticos (scripts/prepare.sql, step 4).
+	// The point at 24:00 only closes the last step, so it belongs to 23:00.
 	const start = wallClockToMs(`${props.day}T00:00:00`)
 	const hour = props.hours[Math.min(Math.floor((time - start) / HOUR), 23)]
 	const peak = hour
@@ -91,36 +102,39 @@ const option = computed<EChartsOption>(() => {
 	const surface = SURFACE[mode.value]
 	const end = wallClockToMs(`${props.day}T00:00:00`) + 24 * HOUR
 
+	/** One value per hour, held from the hour's first segment; the extra point closes 23:50–24:00. */
+	function hourly(key: 'sc_channels' | 'k9_channels' | 'porticos') {
+		const points = props.rows.map(row => [wallClockToMs(row.dt_segmento), row[key]])
+		return points.length ? [...points, [end, points[points.length - 1][1]]] : []
+	}
+
 	const yAxis: YAXisComponentOption[] = [{
 		type: 'value',
-		name: 'Capacidad Canal',
+		name: 'Canales y pórticos',
 		min: 0,
-		max: props.maxChannels,
+		max: props.maxCount,
 		interval: 1,
 		nameTextStyle: { align: 'left', color: theme.text },
 		axisLabel: { color: theme.text },
 		splitLine: { lineStyle: { color: theme.grid } },
 	}]
 
-	const series: LineSeriesOption[] = CHANNELS.map((c, i) => {
-		const points = props.rows.map(row => [wallClockToMs(row.dt_segmento), row[c.key]])
-		return {
-			id: c.key,
-			name: c.name,
-			type: 'line',
-			stack: 'canales',
-			// each hour's channels hold until the next segment; the extra point closes 23:50–24:00
-			step: 'end',
-			data: points.length ? [...points, [end, points[points.length - 1][1]]] : [],
-			// no dots on hover either: the areas are read by their height
-			symbol: 'none',
-			color: c.color[mode.value],
-			areaStyle: { color: c.color[mode.value], opacity: 1 },
-			// SC's top edge, in the card's color and drawn over K9: the 2px gap between the two
-			lineStyle: { width: i === 0 ? 2 : 0, color: surface },
-			z: i === 0 ? 3 : 2,
-		}
-	})
+	const series: LineSeriesOption[] = CHANNELS.map((c, i) => ({
+		id: c.key,
+		name: c.name,
+		type: 'line',
+		stack: 'canales',
+		// each hour's channels hold until the next segment
+		step: 'end',
+		data: hourly(c.key),
+		// no dots on hover either: the areas are read by their height
+		symbol: 'none',
+		color: c.color[mode.value],
+		areaStyle: { color: c.color[mode.value], opacity: 1 },
+		// SC's top edge, in the card's color and drawn over K9: the 2px gap between the two
+		lineStyle: { width: i === 0 ? 2 : 0, color: surface },
+		z: i === 0 ? 3 : 2,
+	}))
 
 	if (showPax.value) {
 		yAxis.push({
@@ -130,14 +144,14 @@ const option = computed<EChartsOption>(() => {
 			// USWDS: line charts start at zero, on both axes
 			min: 0,
 			minInterval: 1,
-			// ticks at the same heights as the channels', so the grid stays one set of lines
+			// ticks at the same heights as the left axis', so the grid stays one set of lines
 			alignTicks: true,
 			nameTextStyle: { align: 'right', color: PAX.text[mode.value] },
 			axisLabel: { color: PAX.text[mode.value], formatter: (value: number) => integer.format(value) },
 			splitLine: { show: false },
 		})
 		const data = props.rows.map(row => [wallClockToMs(row.dt_segmento), Math.round(row.pax)])
-		// first in the list, so the tooltip follows the legend's order; z draws them on top
+		// first in the list, so the tooltip follows the legend's order; z draws them over the stack
 		series.unshift(
 			{
 				id: 'pax-halo',
@@ -166,13 +180,41 @@ const option = computed<EChartsOption>(() => {
 		)
 	}
 
+	// Last in the tooltip, as in the legend, and on top: where it runs along the stack's top edge
+	// (as many pórticos as channels), its halo keeps the two apart
+	const porticos = hourly('porticos')
+	series.push(
+		{
+			id: 'porticos-halo',
+			name: 'Pórticos',
+			type: 'line',
+			step: 'end',
+			data: porticos,
+			symbol: 'none',
+			silent: true,
+			lineStyle: { width: 7, color: surface },
+			z: 6,
+		},
+		{
+			id: 'porticos',
+			name: 'Pórticos',
+			type: 'line',
+			step: 'end',
+			data: porticos,
+			showSymbol: false,
+			color: PORTICOS[mode.value],
+			lineStyle: { width: 3 },
+			z: 7,
+		},
+	)
+
 	return {
 		// x values are wall-clock times read as UTC (see data/days.ts), so format them in UTC too
 		useUTC: true,
 		aria: {
 			enabled: true,
 			label: {
-				description: `Canales SC y K9 abiertos por intervalo de 10 minutos, llegadas, ${formatLongDate(props.day)}.${showPax.value ? ' Con los pasajeros por intervalo en el eje derecho.' : ''}`,
+				description: `Canales SC y K9 abiertos y pórticos por intervalo de 10 minutos, llegadas, ${formatLongDate(props.day)}.${showPax.value ? ' Con los pasajeros por intervalo en el eje derecho.' : ''}`,
 			},
 		},
 		textStyle: { fontFamily: FONT },
@@ -198,6 +240,10 @@ const option = computed<EChartsOption>(() => {
 				<li v-for="c in CHANNELS" :key="c.key" class="flex items-center gap-2">
 					<span class="h-3 w-6 rounded-xs" :style="{ background: c.color[mode] }" />
 					{{ c.name }}
+				</li>
+				<li class="flex items-center gap-2">
+					<span class="w-6" :style="{ borderTop: `3px solid ${PORTICOS[mode]}` }" />
+					Pórticos
 				</li>
 			</ul>
 			<USwitch v-model="showPax" label="Mostrar pasajeros" size="lg" />

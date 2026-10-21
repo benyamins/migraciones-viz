@@ -26,7 +26,7 @@ export default defineConfig({
   // Relative asset URLs: the same build works at a domain's root and under /migraciones-viz/
   // on github.io. Safe because every page sits in the root folder, without client-side routes.
   base: './',
-  // One HTML file per page (a multi-page app). GitHub Pages serves casetas.html at /casetas.
+  // One HTML file per page (a multi-page app). GitHub Pages serves pdi.html at /pdi.
   input: pages.map(page => page.file),
   // No fallback to index.html: an unknown URL is a 404 in dev too, as on GitHub Pages
   appType: 'mpa',

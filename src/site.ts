@@ -12,8 +12,8 @@ export interface Page {
 	file: string
 	/**
 	 * Relative link, so the site works at a domain's root and under /migraciones-viz/.
-	 * GitHub Pages serves casetas.html at `casetas`. Never end a link with '/': GitHub Pages
-	 * would look for casetas/index.html and answer 404.
+	 * GitHub Pages serves pdi.html at `pdi`. Never end a link with '/': GitHub Pages would
+	 * look for pdi/index.html and answer 404.
 	 */
 	href: string
 	/** Link text in the header. */
@@ -33,11 +33,11 @@ export const PAGES = {
 		title: 'Flujo de pasajeros',
 		description: 'Pasajeros proyectados por hora en el control migratorio.',
 	},
-	casetas: {
-		file: 'casetas.html',
-		href: './casetas',
-		label: 'Casetas',
-		title: 'Capacidad de casetas',
+	pdi: {
+		file: 'pdi.html',
+		href: './pdi',
+		label: 'PDI',
+		title: 'Capacidad PDI',
 		description: 'Casetas proyectadas (NPU/PDI) y capacidad propuesta, en intervalos de 10 minutos.',
 	},
 	aduanasSag: {
@@ -45,7 +45,7 @@ export const PAGES = {
 		href: './aduanas-sag',
 		label: 'Aduanas y SAG',
 		title: 'Capacidad Aduanas y SAG',
-		description: 'Canales SC y K9 según los pasajeros que llegan cada hora, en intervalos de 10 minutos.',
+		description: 'Canales (SC y K9) y pórticos según los pasajeros que llegan cada hora, en intervalos de 10 minutos.',
 	},
 } as const satisfies Record<string, Page>
 

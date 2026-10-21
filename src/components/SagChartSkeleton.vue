@@ -6,6 +6,6 @@ defineOptions({ inheritAttrs: false })
 </script>
 
 <template>
-	<!-- SagChart's legend: Pasajeros (eje derecho), SC, K9 -->
-	<ChartSkeleton :legend="['w-48', 'w-12', 'w-12']" :class="$attrs.class" />
+	<!-- SagChart's legend: Pasajeros (eje derecho), SC, K9, Pórticos -->
+	<ChartSkeleton :legend="['w-48', 'w-12', 'w-12', 'w-22']" :class="$attrs.class" />
 </template>

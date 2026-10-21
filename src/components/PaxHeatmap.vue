@@ -30,9 +30,14 @@ const todayDay = today('America/Santiago').toString()
 
 const chart = computed(() => props.view === 'chart')
 
-/** Link to the day on Casetas: the overview here, the details there. */
-function casetasLink(day: string) {
-	return `${PAGES.casetas.href}?${new URLSearchParams({ fecha: day, proceso: props.tipo })}`
+/** 'mié 21', or 'Hoy 21' for today: everyone knows today's weekday. */
+function dayLabel(day: string) {
+	return day === todayDay ? `Hoy ${Number(day.slice(8, 10))}` : formatDayOfMonth(day)
+}
+
+/** Link to the day on PDI: the overview here, the details there. */
+function pdiLink(day: string) {
+	return `${PAGES.pdi.href}?${new URLSearchParams({ fecha: day, proceso: props.tipo })}`
 }
 
 /**
@@ -93,7 +98,7 @@ onBeforeUnmount(() => removeEventListener('scroll', hideTip, { capture: true }))
 				</caption>
 				<thead>
 					<tr class="text-muted">
-						<th scope="col" class="sticky left-0 z-10 w-14 bg-default sm:w-18">
+						<th scope="col" class="sticky left-0 z-10 w-15 bg-default sm:w-18">
 							<span class="sr-only">Día</span>
 						</th>
 						<th v-for="hour in HOURS" :key="hour" scope="col" class="pb-1 font-normal">
@@ -117,18 +122,23 @@ onBeforeUnmount(() => removeEventListener('scroll', hideTip, { capture: true }))
 						:class="[
 							// a small gap before each Monday, so the weeks show
 							i > 0 && isoWeekday(day.day) === 1 && '[&>*]:border-t-4 [&>*]:border-transparent [&>*]:bg-clip-padding',
-							day.day === todayDay && 'outline-2 outline-offset-1 outline-primary',
 						]"
 					>
-						<th scope="row" class="sticky left-0 z-10 bg-default pr-1 text-left font-normal whitespace-nowrap">
+						<th scope="row" class="sticky left-0 z-10 bg-default pr-1 pl-2.5 text-left font-normal whitespace-nowrap">
+							<!--
+								Today: "Hoy" in bold and the primary color, and a 4px bar in the left padding, like
+								the current page's underline in the header
+							-->
+							<span v-if="day.day === todayDay" aria-hidden="true" class="absolute inset-y-0.5 left-0 w-1 rounded-full bg-primary" />
 							<a
-								:href="casetasLink(day.day)"
-								class="rounded-xs text-toned underline-offset-2 hover:text-highlighted hover:underline focus-visible:outline-2 focus-visible:outline-primary"
+								:href="pdiLink(day.day)"
+								:class="[
+									'rounded-xs underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary',
+									day.day === todayDay ? 'font-semibold text-primary' : 'text-toned hover:text-highlighted',
+								]"
 							>
-								{{ formatDayOfMonth(day.day) }}
+								{{ dayLabel(day.day) }}
 							</a>
-							<!-- on phones the column is too narrow for the tag: the outline marks today -->
-							<span v-if="day.day === todayDay" class="ml-1 rounded-xs bg-primary px-1 text-[0.625rem] font-bold text-inverted uppercase max-sm:sr-only">Hoy</span>
 						</th>
 						<td
 							v-for="hour in HOURS"

@@ -8,12 +8,13 @@ export interface SagHour {
 	/** Passengers in the clock hour, rounded. */
 	pax: number
 	/**
-	 * The 60 minutes that set the hour's channels (scripts/prepare.sql, step 4): their first
-	 * 10-minute segment of the day, and their passengers, rounded as in prepare.sql.
+	 * The 60 minutes that set the hour's channels and pórticos (scripts/prepare.sql, step 4):
+	 * their first 10-minute segment of the day, and their passengers, rounded as in prepare.sql.
 	 */
 	peak: { start: number; pax: number }
 	sc: number
 	k9: number
+	porticos: number
 }
 
 /** One row per hour for the arrival rows of a single day, in time order. */
@@ -27,7 +28,7 @@ export function summarizeSagByHour(rows: PaxRow[]): SagHour[] {
 			summary.pax += tenths(row.pax)
 			continue
 		}
-		// prepare.sql gives every segment of an hour the same channels and window
+		// prepare.sql gives every segment of an hour the same channels, pórticos and window
 		const start = Number(row.dt_segmento.slice(11, 13)) * SEGMENTS_PER_HOUR + (row.sag_desde_min ?? 0) / 10
 		hours.set(hour, {
 			hour,
@@ -35,6 +36,7 @@ export function summarizeSagByHour(rows: PaxRow[]): SagHour[] {
 			peak: { start, pax: wholePax(sum60(segments, start)) },
 			sc: row.sc_channels ?? 0,
 			k9: row.k9_channels ?? 0,
+			porticos: row.porticos ?? 0,
 		})
 	}
 	return [...hours.values()].map(summary => ({ ...summary, pax: wholePax(summary.pax) }))

@@ -8,7 +8,6 @@ export interface HourSummary {
 	pax: number
 	/** Booth columns: the highest value among the hour's segments, i.e. what had to be staffed. */
 	pdi_npu: number
-	cap_percentil_75: number
 	cap_aplanada: number
 }
 
@@ -23,14 +22,12 @@ export function summarizeByHour(rows: PaxRow[]): HourSummary[] {
 				hour,
 				pax: tenths(row.pax),
 				pdi_npu: row.pdi_npu,
-				cap_percentil_75: row.cap_percentil_75,
 				cap_aplanada: row.cap_aplanada,
 			})
 			continue
 		}
 		summary.pax += tenths(row.pax)
 		summary.pdi_npu = Math.max(summary.pdi_npu, row.pdi_npu)
-		summary.cap_percentil_75 = Math.max(summary.cap_percentil_75, row.cap_percentil_75)
 		summary.cap_aplanada = Math.max(summary.cap_aplanada, row.cap_aplanada)
 	}
 	// pax adds up whole tenths (see pax.ts) and is rounded once at the end

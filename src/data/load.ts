@@ -1,6 +1,6 @@
 import { decompress } from 'fzstd'
 import { parquetMetadata, parquetReadObjects } from 'hyparquet'
-import type { PaxRow, SagRule } from './types'
+import type { PaxRow, PorticoRule, SagRule } from './types'
 
 // hyparquet only decodes SNAPPY by itself; ZSTD comes from fzstd. fzstd's decompress takes an
 // output buffer as its second argument, while hyparquet passes the expected length, so wrap it.
@@ -15,8 +15,12 @@ export interface PaxData {
 	rows: PaxRow[]
 	/** When scripts/prepare.sql generated the file (undefined for files without that metadata). */
 	updatedAt?: Date
-	/** The SAG rules prepare.sql applied, from the fewest passengers up (empty for files without them). */
+	/**
+	 * The rules prepare.sql applied, from the fewest passengers up (empty for files without them):
+	 * the capacidad_aduanas_sag and porticos sheets.
+	 */
 	sagRules: SagRule[]
+	porticoRules: PorticoRule[]
 }
 
 export async function loadPax(): Promise<PaxData> {
@@ -30,8 +34,12 @@ export async function loadPax(): Promise<PaxData> {
 	// Parsing it here and handing it to parquetReadObjects avoids parsing it twice.
 	const metadata = parquetMetadata(file)
 	const footer = (key: string) => metadata.key_value_metadata?.find(kv => kv.key === key)?.value
+	// The rules are JSON, already sorted by prepare.sql
+	const rules = <T>(key: string): T[] => {
+		const json = footer(key)
+		return json ? JSON.parse(json) as T[] : []
+	}
 	const updated = footer('actualizado')
-	const rules = footer('sag_reglas')
 	const rows = await parquetReadObjects({ file, metadata, compressors }) as ParquetRow[]
 
 	return {
@@ -46,7 +54,7 @@ export async function loadPax(): Promise<PaxData> {
 		})),
 		// Written in UTC ('2026-09-29T16:34:44Z'); shown in Chile's time by PageHeader.vue
 		updatedAt: updated ? new Date(updated) : undefined,
-		// JSON, already sorted by prepare.sql
-		sagRules: rules ? JSON.parse(rules) as SagRule[] : [],
+		sagRules: rules<SagRule>('sag_reglas'),
+		porticoRules: rules<PorticoRule>('porticos_reglas'),
 	}
 }

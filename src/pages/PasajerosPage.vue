@@ -10,7 +10,7 @@ const { rows, updatedAt, loading, error } = usePaxData()
 
 // The other pages, explained for first-time visitors
 const others = [
-	{ page: PAGES.casetas, cta: 'Ver casetas' },
+	{ page: PAGES.pdi, cta: 'Ver PDI' },
 	{ page: PAGES.aduanasSag, cta: 'Ver Aduanas y SAG' },
 ]
 </script>

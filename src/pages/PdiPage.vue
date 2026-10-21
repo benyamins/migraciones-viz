@@ -9,7 +9,7 @@ const { rows, updatedAt, loading, error } = usePaxData()
 </script>
 
 <template>
-	<AppLayout page="casetas" :loading="loading" :updated-at="updatedAt">
+	<AppLayout page="pdi" :loading="loading" :updated-at="updatedAt">
 		<DailyViewSkeleton v-if="loading" />
 		<LoadError v-else-if="error" :error="error" />
 		<DailyView v-else :rows="rows" />
