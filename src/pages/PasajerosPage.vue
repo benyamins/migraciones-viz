@@ -12,6 +12,7 @@ const { rows, updatedAt, loading, error } = usePaxData()
 const others = [
 	{ page: PAGES.pdi, cta: 'Ver PDI' },
 	{ page: PAGES.aduanasSag, cta: 'Ver Aduanas y SAG' },
+	{ page: PAGES.avsec, cta: 'Ver AVSEC' },
 ]
 </script>
 
@@ -21,7 +22,8 @@ const others = [
 		<LoadError v-else-if="error" :error="error" />
 		<MonthlyView v-else :rows="rows" />
 
-		<ul class="mt-4 grid gap-4 sm:mt-6 sm:gap-6 md:grid-cols-2">
+		<!-- A USWDS card group: two columns on tablets, three from desktop up -->
+		<ul class="mt-4 grid gap-4 sm:mt-6 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
 			<li
 				v-for="{ page, cta } in others"
 				:key="page.file"

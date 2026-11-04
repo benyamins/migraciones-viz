@@ -1,6 +1,6 @@
 import { decompress } from 'fzstd'
 import { parquetMetadata, parquetReadObjects } from 'hyparquet'
-import type { PaxRow, PorticoRule, SagRule } from './types'
+import type { AvsecRule, PaxRow, PorticoRule, SagRule } from './types'
 
 // hyparquet only decodes SNAPPY by itself; ZSTD comes from fzstd. fzstd's decompress takes an
 // output buffer as its second argument, while hyparquet passes the expected length, so wrap it.
@@ -16,11 +16,13 @@ export interface PaxData {
 	/** When scripts/prepare.sql generated the file (undefined for files without that metadata). */
 	updatedAt?: Date
 	/**
-	 * The rules prepare.sql applied, from the fewest passengers up (empty for files without them):
-	 * the capacidad_aduanas_sag and porticos sheets.
+	 * The rules from the Excel, from the fewest passengers up (empty for files without them): the
+	 * capacidad_aduanas_sag and porticos sheets, which prepare.sql applied, and the avsec sheet,
+	 * which the AVSEC page applies (src/data/avsec.ts).
 	 */
 	sagRules: SagRule[]
 	porticoRules: PorticoRule[]
+	avsecRules: AvsecRule[]
 }
 
 export async function loadPax(): Promise<PaxData> {
@@ -56,5 +58,6 @@ export async function loadPax(): Promise<PaxData> {
 		updatedAt: updated ? new Date(updated) : undefined,
 		sagRules: rules<SagRule>('sag_reglas'),
 		porticoRules: rules<PorticoRule>('porticos_reglas'),
+		avsecRules: rules<AvsecRule>('avsec_reglas'),
 	}
 }

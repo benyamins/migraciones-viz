@@ -22,7 +22,7 @@ const integer = new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 })
 			tabindex="0"
 			role="group"
 			aria-labelledby="sag-hourly-title"
-			class="min-h-0 flex-1 rounded-xs focus-visible:outline-2 focus-visible:outline-primary lg:overflow-y-auto lg:[scrollbar-gutter:stable] lg:[scrollbar-width:thin]"
+			class="min-h-0 flex-1 rounded-xs focus-visible:outline-2 focus-visible:outline-primary lg:overflow-y-auto lg:pr-2 lg:[scrollbar-gutter:stable] lg:[scrollbar-width:thin]"
 		>
 			<table class="w-full text-sm tabular-nums">
 				<caption class="sr-only">

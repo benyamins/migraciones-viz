@@ -19,14 +19,18 @@ FROM
 ;
 
 -- ---------------------------------------------------------------------------------------------
--- Aduanas y SAG: the channels and pórticos for the passengers who arrive each hour.
+-- The rules, in three sheets: one row per range of passengers.
+-- - capacidad_aduanas_sag and porticos: the Aduanas y SAG channels and pórticos for the
+--   passengers who arrive in 60 minutes. This script applies them (steps 3 to 5).
+-- - avsec: the AVSEC machines for the passengers who leave in 10 minutes. The page applies them
+--   (src/data/avsec.ts): each segment's machines follow from its own passengers, which the file
+--   already has, so a column would only add size (about 2.5 KB).
 -- No number from the rules is written here or in the site's code: to change them, edit the
 -- sheets, run this script and push.
 -- ---------------------------------------------------------------------------------------------
 
--- 1. The rules, in two sheets: one row per range of passengers per hour. `fila` is the row
---    number in Excel, for the error messages. stop_at_empty = false: rows after an empty row
---    still count.
+-- 1. Read the sheets. `fila` is the row number in Excel, for the error messages.
+--    stop_at_empty = false: rows after an empty row still count.
 CREATE TEMP TABLE sag_hoja AS
 SELECT *
 FROM (
@@ -61,9 +65,26 @@ FROM (
 WHERE NOT (pax_min IS NULL AND pax_max IS NULL AND porticos IS NULL)
 ;
 
+CREATE TEMP TABLE avsec_hoja AS
+SELECT *
+FROM (
+    SELECT
+        row_number() OVER () + 1 AS fila
+        ,*
+    FROM
+        read_xlsx(
+            'data/source.xlsx',
+            sheet = 'avsec',
+            header = true,
+            stop_at_empty = false
+        )
+)
+WHERE NOT (pax_min IS NULL AND pax_max IS NULL AND maquinas IS NULL)
+;
+
 -- 2. Stop with a clear message if a sheet breaks a rule, so a bad sheet never reaches the site.
 --    Together these mean that every number of passengers falls in exactly one range of each
---    sheet. Both sheets get the same checks: `valores` holds the numbers a range gives.
+--    sheet. All three sheets get the same checks: `valores` holds the numbers a range gives.
 CREATE TEMP TABLE rangos AS
 SELECT
     'capacidad_aduanas_sag' AS hoja
@@ -76,9 +97,12 @@ FROM sag_hoja
 UNION ALL
 SELECT 'porticos', fila, pax_min, pax_max, [porticos], false
 FROM porticos_hoja
+UNION ALL
+SELECT 'avsec', fila, pax_min, pax_max, [maquinas], false
+FROM avsec_hoja
 ;
 
-SET VARIABLE sag_problemas = (
+SET VARIABLE reglas_problemas = (
     WITH ordenadas AS (
         SELECT
             *
@@ -90,7 +114,7 @@ SET VARIABLE sag_problemas = (
     SELECT string_agg(problema, '; ' ORDER BY hoja, fila)
     FROM (
         SELECT hoja, 0 AS fila, format('Sheet {}: it has no rules', hoja) AS problema
-        FROM (VALUES ('capacidad_aduanas_sag'), ('porticos')) hojas (hoja)
+        FROM (VALUES ('capacidad_aduanas_sag'), ('porticos'), ('avsec')) hojas (hoja)
         WHERE hoja NOT IN (SELECT hoja FROM rangos)
         UNION ALL
         SELECT hoja, fila, format('Sheet {}, row {}: {}', hoja, fila, problema)
@@ -120,10 +144,10 @@ SET VARIABLE sag_problemas = (
         )
     )
 );
-SET VARIABLE sag_ok = (
+SET VARIABLE reglas_ok = (
     SELECT CASE
-        WHEN getvariable('sag_problemas') IS NOT NULL
-        THEN error(getvariable('sag_problemas'))
+        WHEN getvariable('reglas_problemas') IS NOT NULL
+        THEN error(getvariable('reglas_problemas'))
         ELSE true
     END
 );
@@ -144,6 +168,14 @@ SELECT
     ,pax_max::INTEGER AS pax_max
     ,porticos::INTEGER AS porticos
 FROM porticos_hoja
+;
+
+CREATE TEMP TABLE avsec_reglas AS
+SELECT
+    pax_min::INTEGER AS pax_min
+    ,pax_max::INTEGER AS pax_max
+    ,maquinas::INTEGER AS maquinas
+FROM avsec_hoja
 ;
 
 -- 3. Every 60-minute window of arrivals inside a day: six 10-minute segments added up.
@@ -210,10 +242,11 @@ SET VARIABLE sag_horas_ok = (
     LEFT JOIN sag_por_hora c USING (hora)
 );
 
--- 6. Both sets of rules, as JSON. They record which rules made this file, and the page takes
---    the top of the chart's left axis from them.
+-- 6. The three sets of rules, as JSON. They record which rules made this file, and the pages
+--    take the top of each chart's left axis from them. The AVSEC page also applies its rules.
 SET VARIABLE sag_reglas = (SELECT to_json(list(r ORDER BY pax_min))::VARCHAR FROM sag_reglas r);
 SET VARIABLE porticos_reglas = (SELECT to_json(list(r ORDER BY pax_min))::VARCHAR FROM porticos_reglas r);
+SET VARIABLE avsec_reglas = (SELECT to_json(list(r ORDER BY pax_min))::VARCHAR FROM avsec_reglas r);
 
 -- Size choices (measured on Feb, Apr and Sep 2026: 78 KB -> 47 KB):
 -- - ORDER BY tipo first: each process's series is contiguous, so neighboring values are similar
@@ -250,6 +283,7 @@ TO 'public/data/pax.parquet'
     ,KV_METADATA {
         actualizado: strftime(timezone('UTC', now()), '%Y-%m-%dT%H:%M:%SZ'),
         sag_reglas: getvariable('sag_reglas'),
-        porticos_reglas: getvariable('porticos_reglas')
+        porticos_reglas: getvariable('porticos_reglas'),
+        avsec_reglas: getvariable('avsec_reglas')
     }
 );

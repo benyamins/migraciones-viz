@@ -38,6 +38,14 @@ export interface PorticoRule {
 	porticos: number
 }
 
+/** A row of the avsec sheet: the AVSEC machines for a range of passengers who leave in 10 minutes. */
+export interface AvsecRule {
+	pax_min: number
+	/** null in the last range: no maximum */
+	pax_max: number | null
+	maquinas: number
+}
+
 /** Process shown for each direction (the source's `proceso` column maps 1:1 to `tipo`). */
 export const PROCESOS: Record<Tipo, string> = {
 	llegada: 'Inmigración',

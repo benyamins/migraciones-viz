@@ -47,6 +47,13 @@ export const PAGES = {
 		title: 'Capacidad Aduanas y SAG',
 		description: 'Canales (SC y K9) y pórticos según los pasajeros que llegan cada hora, en intervalos de 10 minutos.',
 	},
+	avsec: {
+		file: 'avsec.html',
+		href: './avsec',
+		label: 'AVSEC',
+		title: 'Máquinas AVSEC',
+		description: 'Máquinas del control de seguridad según los pasajeros que salen, en intervalos de 10 minutos.',
+	},
 } as const satisfies Record<string, Page>
 
 export type PageId = keyof typeof PAGES
