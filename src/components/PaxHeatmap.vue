@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { today } from '@internationalized/date'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { formatDayOfMonth, formatShortDate, isoWeekday } from '../data/days'
+import { formatShortDate, formatShortWeekday, isoWeekday, todayInChile } from '../data/days'
 import type { DaySummary } from '../data/monthly'
 import { SEGMENTS_PER_HOUR, segmentTime, windowLabel } from '../data/segments'
 import { PROCESOS, type Tipo } from '../data/types'
@@ -14,30 +13,39 @@ const props = defineProps<{
 	tipo: Tipo
 	/** 'octubre 2026', for the caption */
 	monthLabel: string
-	/**
-	 * On a card under 81rem (MonthlyView) the numbers don't fit in the cells: 'chart' shows the
-	 * colors only, fitted to the screen; 'table' shows every number and scrolls sideways.
-	 * On wider cards both look the same.
-	 */
-	view: 'chart' | 'table'
-	/** Passengers that fill a Total bar: the same for every month, so bars compare across months. */
-	scaleMax: number
+	/** The two days the cards above name (monthHighlights): their total and hora punta in bold. */
+	busiestDay: string
+	peakDay: string
 }>()
 
 const HOURS = Array.from({ length: 24 }, (_, hour) => hour)
 const integer = new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 })
-const todayDay = today('America/Santiago').toString()
+const todayDay = todayInChile()
 
-const chart = computed(() => props.view === 'chart')
-
-/** 'mié 21', or 'Hoy 21' for today: everyone knows today's weekday. */
-function dayLabel(day: string) {
-	return day === todayDay ? `Hoy ${Number(day.slice(8, 10))}` : formatDayOfMonth(day)
+/** 'mié', or 'Hoy' for today: everyone knows today's weekday. */
+function weekdayLabel(day: string) {
+	return day === todayDay ? 'Hoy' : formatShortWeekday(day)
 }
 
 /** Link to the day on PDI: the overview here, the details there. */
 function pdiLink(day: string) {
 	return `${PAGES.pdi.href}?${new URLSearchParams({ fecha: day, proceso: props.tipo })}`
+}
+
+/*
+  The Total column: a dot on a line that runs from the month's quietest day (left end) to its
+  busiest (right end). Not bars from zero: a month's days are close in passengers, so the bars
+  all came out about as long, and the busiest day didn't show.
+*/
+const totalRange = computed(() => {
+	const totals = props.days.map(day => day.total)
+	return { min: Math.min(...totals), max: Math.max(...totals) }
+})
+
+/** The dot's place on the line: 0 for the month's quietest day, 1 for its busiest. */
+function dotPosition(total: number) {
+	const { min, max } = totalRange.value
+	return max > min ? (total - min) / (max - min) : 0.5
 }
 
 /**
@@ -54,12 +62,14 @@ function peakLine(day: DaySummary, hour: number) {
 	return { left: `${left}%`, right: right === 0 && to < day.peak.start + SEGMENTS_PER_HOUR ? '-2px' : `${right}%` }
 }
 
-// Hover tooltip: an extra for pointers. The numbers are already in the cells (or the table
-// view), so keyboard and screen reader users don't need it. Fixed to the screen, so the scroll
-// container never clips it.
+// Hover tooltip: an extra for mouse users. The numbers are already in the cells, so keyboard,
+// screen reader and touch users don't need it. Fixed to the screen, so the scroll container
+// never clips it.
 const tip = ref<{ x: number, y: number, title: string, pax: number }>()
 
 function showTip(event: PointerEvent) {
+	// A finger covers the cell, and the tooltip would only flash until it lifts
+	if (event.pointerType === 'touch') return
 	const cell = (event.target as Element).closest<HTMLElement>('td[data-hour]')
 	const day = props.days.find(d => d.day === cell?.parentElement?.dataset.day)
 	if (!cell || !day) {
@@ -85,33 +95,34 @@ onBeforeUnmount(() => removeEventListener('scroll', hideTip, { capture: true }))
 
 <template>
 	<div class="-mx-4 sm:mx-0" @pointerleave="hideTip">
-		<!-- The table view scrolls sideways, with the dates fixed on the left -->
+		<!--
+			On cards narrower than the table it scrolls sideways, with the dates fixed on the left.
+			The dates' cells cast a solid shadow in the card's color: 1rem to the left over this
+			box's padding on phones, where sticky cells stop, and 2px to the right over the gap
+			before the first hour, so no number shows around them as the table scrolls under.
+		-->
 		<div class="overflow-x-auto px-4 sm:px-0">
 			<!--
 				A real table: the caption and the row and column headers make it readable with a
 				screen reader as it is. Cells are 2px apart (border-spacing), without borders.
-				table-fixed: the 24 hour columns share the width equally.
+				table-fixed: the 24 hour columns share the width equally. min-w: the hour cells
+				stay 32px or wider, so their numbers fit.
 			-->
-			<table :class="['w-full table-fixed border-separate border-spacing-0.5 text-xs tabular-nums', { '@max-[81rem]:min-w-[72rem]': !chart }]">
+			<table class="w-full min-w-[72rem] table-fixed border-separate border-spacing-0.5 text-xs tabular-nums">
 				<caption class="sr-only">
 					Pasajeros por hora, {{ PROCESOS[tipo] }}, {{ monthLabel }}. Al final de cada día, su total y su hora punta.
 				</caption>
 				<thead>
 					<tr class="text-muted">
-						<th scope="col" class="sticky left-0 z-10 w-15 bg-default sm:w-18">
-							<span class="sr-only">Día</span>
+						<!-- the dates are links, and the header says so: phones have no hover to hint it -->
+						<th scope="col" class="sticky left-0 z-10 w-16 bg-default pr-1 pb-1 pl-2.5 text-left font-normal whitespace-nowrap shadow-[-1rem_0_0_var(--ui-bg),2px_0_0_var(--ui-bg)]">
+							Ir a día
 						</th>
 						<th v-for="hour in HOURS" :key="hour" scope="col" class="pb-1 font-normal">
-							<!-- colors only: every third hour, so the labels don't touch -->
-							<span :class="{ '@max-[81rem]:sr-only': chart && hour % 3 }">{{ String(hour).padStart(2, '0') }}</span>
+							{{ String(hour).padStart(2, '0') }}
 						</th>
-						<!-- colors only, on phones: these two columns keep their text for screen readers only -->
-						<th scope="col" :class="['w-26 pb-1 pl-3 text-left font-normal', { 'max-md:w-0 max-md:pl-0': chart }]">
-							<span :class="{ 'max-md:sr-only': chart }">Total</span>
-						</th>
-						<th scope="col" :class="['w-36 pb-1 pl-3 text-left font-normal', { 'max-md:w-0 max-md:pl-0': chart }]">
-							<span :class="{ 'max-md:sr-only': chart }">Hora punta</span>
-						</th>
+						<th scope="col" class="w-30 pb-1 pl-3 text-left font-normal">Total</th>
+						<th scope="col" class="w-36 pb-1 pl-3 text-left font-normal">Hora punta</th>
 					</tr>
 				</thead>
 				<tbody @pointerover="showTip">
@@ -124,32 +135,42 @@ onBeforeUnmount(() => removeEventListener('scroll', hideTip, { capture: true }))
 							i > 0 && isoWeekday(day.day) === 1 && '[&>*]:border-t-4 [&>*]:border-transparent [&>*]:bg-clip-padding',
 						]"
 					>
-						<th scope="row" class="sticky left-0 z-10 bg-default pr-1 pl-2.5 text-left font-normal whitespace-nowrap">
+						<th scope="row" class="sticky left-0 z-10 bg-default pr-1 pl-2.5 font-normal whitespace-nowrap shadow-[-1rem_0_0_var(--ui-bg),2px_0_0_var(--ui-bg)]">
 							<!--
-								Today: "Hoy" in bold and the primary color, and a 4px bar in the left padding, like
-								the current page's underline in the header
+								Today: "Hoy" in bold, and a 4px bar in the left padding, like the current
+								page's underline in the header
 							-->
 							<span v-if="day.day === todayDay" aria-hidden="true" class="absolute inset-y-0.5 left-0 w-1 rounded-full bg-primary" />
+							<!--
+								In the link color, as USWDS links are. The weekday at the left and the day
+								number at the right, so the numbers line up. The space between the two keeps
+								the link's name "mié 21" for screen readers; the flex layout doesn't show it.
+							-->
 							<a
 								:href="pdiLink(day.day)"
 								:class="[
-									'rounded-xs underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary',
-									day.day === todayDay ? 'font-semibold text-primary' : 'text-toned hover:text-highlighted',
+									'flex justify-between gap-1 rounded-xs text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary',
+									{ 'font-semibold': day.day === todayDay },
 								]"
 							>
-								{{ dayLabel(day.day) }}
+								<span>{{ weekdayLabel(day.day) }}</span> <span>{{ Number(day.day.slice(8, 10)) }}</span>
 							</a>
 						</th>
+						<!--
+							proportional-nums: Public Sans' tabular digits make "1.052" 35px wide, too wide
+							for a 32px cell; with proportional digits it's 27px ("2.024", the largest hour
+							in the data, 30px). The numbers are centered, so they don't need to line up.
+						-->
 						<td
 							v-for="hour in HOURS"
 							:key="hour"
 							:data-hour="hour"
 							:class="[
 								`heat-${heatClass(day.hours[hour])}`,
-								'relative h-6 bg-(--heat) text-center text-[0.6875rem] text-(--heat-ink) hover:z-[1] hover:outline-2 hover:outline-(--ui-text-highlighted)',
+								'relative h-6 bg-(--heat) text-center text-[0.6875rem] text-(--heat-ink) proportional-nums hover:z-[1] hover:outline-2 hover:outline-(--ui-text-highlighted)',
 							]"
 						>
-							<span :class="{ '@max-[81rem]:sr-only': chart }">{{ integer.format(day.hours[hour]) }}</span>
+							{{ integer.format(day.hours[hour]) }}
 							<!-- hora punta: a line across the part of the hour its 60 minutes cover -->
 							<span
 								v-if="peakLine(day, hour)"
@@ -158,19 +179,27 @@ onBeforeUnmount(() => removeEventListener('scroll', hideTip, { capture: true }))
 								:style="peakLine(day, hour)"
 							/>
 						</td>
-						<td :class="['pl-3', { 'max-md:pl-0': chart }]">
-							<span :class="['flex items-center gap-1.5', { 'max-md:sr-only': chart }]">
-								<!-- the same scale every month: the longest bar is the busiest day in the data -->
-								<span aria-hidden="true" class="h-2 w-10 shrink-0 overflow-hidden rounded-full bg-elevated">
-									<span class="block h-full rounded-full bg-[#009d9a] dark:bg-[#2dd4bf]" :style="{ width: `${day.total / scaleMax * 100}%` }" />
+						<td class="pl-3">
+							<span class="flex items-center gap-2">
+								<span aria-hidden="true" class="relative h-2 w-14 shrink-0">
+									<span class="absolute inset-x-0 top-[3px] h-0.5 rounded-full bg-accented" />
+									<!--
+										The passengers' teal, as on PDI's chart, with a 2px ring in the card's
+										color so the dot stands clear of the line
+									-->
+									<span
+										class="absolute top-0 size-2 rounded-full bg-[#009d9a] ring-2 ring-(--ui-bg) dark:bg-[#2dd4bf]"
+										:style="{ left: `calc((100% - 0.5rem) * ${dotPosition(day.total)})` }"
+									/>
 								</span>
-								<span class="text-highlighted">{{ integer.format(day.total) }}</span>
+								<span :class="['w-11 text-right text-highlighted', { 'font-bold': day.day === busiestDay }]">
+									{{ integer.format(day.total) }}
+								</span>
 							</span>
 						</td>
-						<td :class="['pl-3 whitespace-nowrap', { 'max-md:pl-0': chart }]">
-							<span :class="{ 'max-md:sr-only': chart }">
-								{{ windowLabel(day.peak.start) }} <span class="text-muted">({{ integer.format(day.peak.pax) }})</span>
-							</span>
+						<td :class="['pl-3 whitespace-nowrap', { 'font-bold text-highlighted': day.day === peakDay }]">
+							{{ windowLabel(day.peak.start) }}
+							<span :class="{ 'text-muted': day.day !== peakDay }">({{ integer.format(day.peak.pax) }})</span>
 						</td>
 					</tr>
 				</tbody>

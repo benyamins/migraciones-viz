@@ -21,7 +21,7 @@ import ChartSkeleton from './ChartSkeleton.vue'
 				</div>
 				<div class="w-full sm:w-auto">
 					<USkeleton class="mb-1.5 h-5 w-11" />
-					<USkeleton class="h-11 w-full sm:h-10 sm:w-67" />
+					<USkeleton class="h-11 w-full sm:h-10 sm:w-80" />
 				</div>
 			</div>
 

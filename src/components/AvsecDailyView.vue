@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, ref, watch } from 'vue'
-import { readQuery, writeQuery } from '../composables/urlQuery'
+import { computed, defineAsyncComponent, ref } from 'vue'
+import { usePageDay } from '../composables/selectedDay'
 import { summarizeAvsecByHour } from '../data/avsec'
-import { defaultDay, formatLongDate, groupByDay } from '../data/days'
+import { formatLongDate, groupByDay } from '../data/days'
 import type { AvsecRule, PaxRow } from '../data/types'
 import { TABS_UI } from '../lib/controls'
 import AvsecChartSkeleton from './AvsecChartSkeleton.vue'
@@ -25,18 +25,9 @@ const byDay = computed(() => groupByDay(props.rows))
 const days = computed(() => [...byDay.value.keys()].sort())
 
 // Local UI state. The day can come from the URL, as on the other pages.
-const day = ref('')
+const day = usePageDay(days)
 /** Below `lg` only one of chart/table is shown at a time; wide screens show both. */
 const view = ref<'chart' | 'table'>('chart')
-
-watch(days, list => {
-	if (!list.includes(day.value)) day.value = defaultDay(list, readQuery('fecha'))
-}, { immediate: true })
-
-// Keep the user's choice in the URL (not the first default day, as on PDI)
-watch(day, (newDay, oldDay) => {
-	if (oldDay) writeQuery({ fecha: newDay })
-})
 
 // AVSEC screens departing passengers only
 const dayRows = computed(() => (byDay.value.get(day.value) ?? []).filter(row => row.tipo === 'salida'))
@@ -64,10 +55,7 @@ const viewTabs = [
 				<UTabs v-model="view" :items="viewTabs" :content="false" :ui="TABS_UI" class="lg:hidden" />
 			</div>
 
-			<fieldset v-if="day" class="w-full sm:w-auto">
-				<legend class="mb-1.5 text-sm font-medium text-toned">Fecha</legend>
-				<DayPicker v-model="day" :days="days" />
-			</fieldset>
+			<DayPicker v-if="day" v-model="day" :days="days" class="w-full sm:w-auto" />
 		</div>
 
 		<!-- Laid out as on the other pages: chart and table side by side from lg up -->

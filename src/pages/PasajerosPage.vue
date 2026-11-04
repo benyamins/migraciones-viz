@@ -3,12 +3,13 @@ import AppLayout from '../components/AppLayout.vue'
 import LoadError from '../components/LoadError.vue'
 import MonthlyView from '../components/MonthlyView.vue'
 import MonthlyViewSkeleton from '../components/MonthlyViewSkeleton.vue'
+import { pageHref } from '../composables/selectedDay'
 import { usePaxData } from '../composables/usePaxData'
 import { PAGES } from '../site'
 
 const { rows, updatedAt, loading, error } = usePaxData()
 
-// The other pages, explained for first-time visitors
+// The other pages, explained for first-time visitors. The links carry the selected day, as the header's do.
 const others = [
 	{ page: PAGES.pdi, cta: 'Ver PDI' },
 	{ page: PAGES.aduanasSag, cta: 'Ver Aduanas y SAG' },
@@ -32,7 +33,7 @@ const others = [
 				<h2 class="text-lg font-bold text-highlighted">{{ page.title }}</h2>
 				<p class="mt-1 text-sm text-muted">{{ page.description }}</p>
 				<a
-					:href="page.href"
+					:href="pageHref(page)"
 					class="mt-3 inline-flex items-center gap-1.5 rounded-xs font-semibold text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
 				>
 					{{ cta }}

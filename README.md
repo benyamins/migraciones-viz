@@ -10,13 +10,20 @@ Published on GitHub Pages at https://jac-mtt.github.io/dashboard-capacidad-amb/ 
 
 | Page | URL | Shows |
 |---|---|---|
-| Pasajeros | `/` | Passengers per hour for one month: a day × hour heatmap, with each day's total and hora punta (its busiest 60 minutes) |
+| Pasajeros | `/` | Passengers per hour for one month: cards with the month's busiest day and busiest 60 minutes, and a day × hour heatmap with each day's total and hora punta (its busiest 60 minutes) |
 | PDI | `/pdi` | Projected booths (NPU/PDI) and proposed capacity every 10 minutes, with the passengers |
 | Aduanas y SAG | `/aduanas-sag` | Open SC and K9 channels and pórticos every 10 minutes, with the arriving passengers |
 | AVSEC | `/avsec` | AVSEC machines every 10 minutes, with the departing passengers |
 
 The filters stay in the URL, so links can open a given view: `/?mes=2026-10&proceso=salida`,
 `/pdi?fecha=2026-10-17&proceso=llegada`, `/aduanas-sag?fecha=2026-10-17`, `/avsec?fecha=2026-10-17`.
+
+The links between pages (the header's, and the cards at the bottom of Pasajeros) carry the day on
+screen (`?fecha=`): PDI, Aduanas y SAG and AVSEC open on that day, and Pasajeros on its month
+(`/?fecha=2026-10-17`). Changing the month on Pasajeros moves the day to that month's first day,
+or to today in the current month. On today the links carry no date, so each page opens on its own
+default, as on a first visit. The "Hoy" button, after the date's or month's arrows, goes back to today.
+Nothing is stored in the browser: each page's URL holds its state (`src/composables/selectedDay.ts`).
 
 Each page is its own HTML file (`index.html`, `pdi.html`, `aduanas-sag.html`, `avsec.html`).
 Names, links and descriptions live in `src/site.ts`.

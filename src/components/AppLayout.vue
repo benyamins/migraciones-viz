@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { es } from '@nuxt/ui/locale'
 import logoJac from '../assets/logo-jac.svg'
+import { pageHref } from '../composables/selectedDay'
 import { APP_NAME, PAGES, type PageId } from '../site'
 import PageHeader from './PageHeader.vue'
 
@@ -59,9 +60,12 @@ const links = Object.entries(PAGES) as [PageId, (typeof PAGES)[PageId]][]
 					<div class="flex min-w-0 flex-col gap-0.5 pt-3 sm:pb-1">
 						<!-- every number on the site is a projection, so this comes first and always shows -->
 						<p class="text-xs font-bold tracking-widest text-primary uppercase max-sm:tracking-wide">Proyección</p>
-						<!-- USWDS: the site name links to the index, and isn't the page's h1 -->
+						<!--
+							USWDS: the site name links to the index, and isn't the page's h1. Like the
+							page links below, it carries the selected day (see selectedDay.ts).
+						-->
 						<a
-							:href="PAGES.pasajeros.href"
+							:href="pageHref(PAGES.pasajeros)"
 							class="self-start rounded-xs text-lg/6 font-bold text-highlighted hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:text-xl/7"
 						>
 							{{ APP_NAME }}
@@ -78,7 +82,7 @@ const links = Object.entries(PAGES) as [PageId, (typeof PAGES)[PageId]][]
 						<ul class="-mb-px flex flex-wrap gap-x-6 sm:gap-x-8">
 							<li v-for="[id, link] in links" :key="id">
 								<a
-									:href="link.href"
+									:href="pageHref(link)"
 									:aria-current="id === page ? 'page' : undefined"
 									:class="[
 										'flex h-11 items-center border-y-4 border-transparent text-sm font-semibold focus-visible:rounded-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:text-base',

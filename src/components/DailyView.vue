@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, ref, watch } from 'vue'
+import { usePageDay } from '../composables/selectedDay'
 import { readQuery, writeQuery } from '../composables/urlQuery'
-import { defaultDay, formatLongDate, groupByDay } from '../data/days'
+import { formatLongDate, groupByDay } from '../data/days'
 import { isTipo, PROCESOS, type PaxRow, type Tipo } from '../data/types'
 import { TABS_UI } from '../lib/controls'
 import ChartSkeleton from './ChartSkeleton.vue'
@@ -21,23 +22,16 @@ const props = defineProps<{ rows: PaxRow[] }>()
 const byDay = computed(() => groupByDay(props.rows))
 const days = computed(() => [...byDay.value.keys()].sort())
 
-// Local UI state. The process and the day can come from the URL (links from the index).
+// Local UI state. The process and the day can come from the URL (links from the index and
+// the header; see selectedDay.ts).
 const urlTipo = readQuery('proceso')
 const tipo = ref<Tipo>(isTipo(urlTipo) ? urlTipo : 'llegada')
-const day = ref('')
+const day = usePageDay(days)
 /** Below `lg` only one of chart/table is shown at a time; wide screens show both. */
 const view = ref<'chart' | 'table'>('chart')
 
-// Choose the day once the days are known: the URL's, else today's or the latest (see defaultDay).
-watch(days, list => {
-	if (!list.includes(day.value)) day.value = defaultDay(list, readQuery('fecha'))
-}, { immediate: true })
-
-// Keep the user's choices in the URL. Not the first default day: a link saved without a date
-// keeps opening today's.
-watch([day, tipo], ([newDay, newTipo], [oldDay]) => {
-	if (oldDay) writeQuery({ fecha: newDay, proceso: newTipo })
-})
+// Keep the user's process in the URL too
+watch(tipo, value => writeQuery({ proceso: value }))
 
 const dayRows = computed(() =>
 	(byDay.value.get(day.value) ?? []).filter(row => row.tipo === tipo.value),
@@ -70,15 +64,12 @@ const viewTabs = [
 			</div>
 
 			<!-- USWDS forms: related controls in a fieldset, with a visible legend as the label -->
-			<div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:gap-6">
+			<div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-6">
 				<fieldset>
 					<legend class="mb-1.5 text-sm font-medium text-toned">Proceso</legend>
 					<UTabs v-model="tipo" :items="tipoTabs" :content="false" :ui="TABS_UI" />
 				</fieldset>
-				<fieldset v-if="day">
-					<legend class="mb-1.5 text-sm font-medium text-toned">Fecha</legend>
-					<DayPicker v-model="day" :days="days" />
-				</fieldset>
+				<DayPicker v-if="day" v-model="day" :days="days" />
 			</div>
 		</div>
 

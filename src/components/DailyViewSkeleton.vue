@@ -20,14 +20,14 @@ import ChartSkeleton from './ChartSkeleton.vue'
 					</div>
 					<USkeleton class="h-11 w-48 sm:h-10 lg:hidden" />
 				</div>
-				<div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:gap-6">
+				<div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-6">
 					<div>
 						<USkeleton class="mb-1.5 h-5 w-14" />
 						<USkeleton class="h-11 w-full sm:h-10 sm:w-53" />
 					</div>
 					<div>
 						<USkeleton class="mb-1.5 h-5 w-11" />
-						<USkeleton class="h-11 w-full sm:h-10 sm:w-67" />
+						<USkeleton class="h-11 w-full sm:h-10 sm:w-80" />
 					</div>
 				</div>
 			</div>

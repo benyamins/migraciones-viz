@@ -8,9 +8,15 @@ export function readQuery(name: string): string | null {
 	return new URLSearchParams(location.search).get(name)
 }
 
-/** Puts the filters in the URL. replaceState: changing a filter doesn't add a step to Back. */
-export function writeQuery(values: Record<string, string>) {
+/**
+ * Puts the filters in the URL, and takes out those set to null. replaceState: changing a filter
+ * doesn't add a step to Back.
+ */
+export function writeQuery(values: Record<string, string | null>) {
 	const url = new URL(location.href)
-	for (const [name, value] of Object.entries(values)) url.searchParams.set(name, value)
+	for (const [name, value] of Object.entries(values)) {
+		if (value === null) url.searchParams.delete(name)
+		else url.searchParams.set(name, value)
+	}
 	history.replaceState(history.state, '', url)
 }

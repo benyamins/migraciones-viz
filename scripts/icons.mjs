@@ -12,7 +12,6 @@ const names = [
   'calendar',
   'chart-line',
   'circle-alert',
-  'grid-3x3',
   'table',
   // used internally by Nuxt UI (appConfig.ui.icons)
   'check',
