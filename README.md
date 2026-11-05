@@ -23,7 +23,7 @@ screen (`?fecha=`): PDI, Aduanas y SAG and AVSEC open on that day, and Pasajeros
 (`/?fecha=2026-10-17`). Changing the month on Pasajeros moves the day to that month's first day,
 or to today in the current month. On today the links carry no date, so each page opens on its own
 default, as on a first visit. The "Hoy" button, after the date's or month's arrows, goes back to today.
-Nothing is stored in the browser: each page's URL holds its state (`src/composables/selectedDay.ts`).
+The filters aren't stored in the browser: each page's URL holds its state (`src/composables/selectedDay.ts`).
 
 Each page is its own HTML file (`index.html`, `pdi.html`, `aduanas-sag.html`, `avsec.html`).
 Names, links and descriptions live in `src/site.ts`.
@@ -75,6 +75,22 @@ once per clone:
 ```bash
 git remote add jac https://github.com/jac-mtt/dashboard-capacidad-amb.git
 ```
+
+## Analytics
+
+The official site sends its visits to Google Analytics (GA4): property "Capacidad Nuevo Pudahuel"
+in the "JAC-Data Analytics" account, web stream `capacity-amb-site`, measurement ID
+`G-VDFNKX9E0S`. `src/analytics.ts` loads Google's tag (gtag.js, from Google's servers; no npm
+package) only on `jac-mtt.github.io`, so the test site and `pnpm dev` send nothing.
+
+What GA counts is set in the stream, not in the code: Admin → Data streams → `capacity-amb-site`
+→ Enhanced measurement. Keep "Page changes based on browser history events" unticked in its page
+views: the pages write their filters into the URL, and each change could count as one more view.
+So a view is a page opened, and its URL has the filters it opened with.
+
+GA sets its cookies (`_ga`, `_ga_VDFNKX9E0S`); GA4 doesn't keep IP addresses. Visits show in
+Reports → Realtime within seconds, and in the other reports after a day or two. Ad blockers hide
+some visits.
 
 ## Data
 
