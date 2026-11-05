@@ -10,7 +10,7 @@ Published on GitHub Pages at https://jac-mtt.github.io/dashboard-capacidad-amb/ 
 
 | Page | URL | Shows |
 |---|---|---|
-| Pasajeros | `/` | Passengers per hour for one month: cards with the month's busiest day and busiest 60 minutes, and a day × hour heatmap with each day's total and hora punta (its busiest 60 minutes) |
+| Pasajeros | `/` | Passengers per hour for one month: cards with the three busiest days and the three busiest 60 minutes, and a day × hour heatmap with each day's total and hora punta (its busiest 60 minutes). On the current month the cards count from today, without today's 60 minutes that have begun; on other months, the whole month |
 | PDI | `/pdi` | Projected booths (NPU/PDI) and proposed capacity every 10 minutes, with the passengers |
 | Aduanas y SAG | `/aduanas-sag` | Open SC and K9 channels and pórticos every 10 minutes, with the arriving passengers |
 | AVSEC | `/avsec` | AVSEC machines every 10 minutes, with the departing passengers |

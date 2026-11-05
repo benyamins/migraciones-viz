@@ -1,4 +1,5 @@
-import { today } from '@internationalized/date'
+import { now, toCalendarDate, today } from '@internationalized/date'
+import { SEGMENTS_PER_HOUR } from './segments'
 import type { PaxRow } from './types'
 
 /*
@@ -81,6 +82,18 @@ export function groupByDay(rows: PaxRow[]): Map<string, PaxRow[]> {
 /** Today in Chile, 'YYYY-MM-DD', whatever the viewer's time zone. */
 export function todayInChile(): string {
 	return today('America/Santiago').toString()
+}
+
+/**
+ * Chile's date and 10-minute segment now, from one reading of the clock: at 11:04 on 5 November,
+ * { day: '2026-11-05', segment: 66 }, the segment from 11:00 to 11:10 (see segments.ts).
+ */
+export function nowInChile(): { day: string; segment: number } {
+	const time = now('America/Santiago')
+	return {
+		day: toCalendarDate(time).toString(),
+		segment: time.hour * SEGMENTS_PER_HOUR + Math.floor(time.minute / 10),
+	}
 }
 
 /**

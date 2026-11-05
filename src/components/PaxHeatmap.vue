@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { pdiDayHref } from '../composables/selectedDay'
 import { formatShortDate, formatShortWeekday, isoWeekday, todayInChile } from '../data/days'
 import type { DaySummary } from '../data/monthly'
 import { SEGMENTS_PER_HOUR, segmentTime, windowLabel } from '../data/segments'
 import { PROCESOS, type Tipo } from '../data/types'
 import { heatClass } from '../lib/heat'
-import { PAGES } from '../site'
 
 const props = defineProps<{
 	/** The month's days, in date order. */
@@ -13,9 +13,12 @@ const props = defineProps<{
 	tipo: Tipo
 	/** 'octubre 2026', for the caption */
 	monthLabel: string
-	/** The two days the cards above name (monthHighlights): their total and hora punta in bold. */
-	busiestDay: string
-	peakDay: string
+	/**
+	 * The day whose total, and the day whose hora punta, the cards above put first
+	 * (monthHighlights): they're in bold here. Undefined: none in bold.
+	 */
+	busiestDay?: string
+	peakDay?: string
 }>()
 
 const HOURS = Array.from({ length: 24 }, (_, hour) => hour)
@@ -25,11 +28,6 @@ const todayDay = todayInChile()
 /** 'mié', or 'Hoy' for today: everyone knows today's weekday. */
 function weekdayLabel(day: string) {
 	return day === todayDay ? 'Hoy' : formatShortWeekday(day)
-}
-
-/** Link to the day on PDI: the overview here, the details there. */
-function pdiLink(day: string) {
-	return `${PAGES.pdi.href}?${new URLSearchParams({ fecha: day, proceso: props.tipo })}`
 }
 
 /*
@@ -147,7 +145,7 @@ onBeforeUnmount(() => removeEventListener('scroll', hideTip, { capture: true }))
 								the link's name "mié 21" for screen readers; the flex layout doesn't show it.
 							-->
 							<a
-								:href="pdiLink(day.day)"
+								:href="pdiDayHref(day.day, tipo)"
 								:class="[
 									'flex justify-between gap-1 rounded-xs text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary',
 									{ 'font-semibold': day.day === todayDay },

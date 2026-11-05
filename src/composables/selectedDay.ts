@@ -1,6 +1,7 @@
 import { computed, ref, watch, type Ref } from 'vue'
 import { defaultDay } from '../data/days'
-import type { Page } from '../site'
+import type { Tipo } from '../data/types'
+import { PAGES, type Page } from '../site'
 import { readQuery, writeQuery } from './urlQuery'
 
 /*
@@ -26,6 +27,11 @@ export function setSelectedDay(day: string, defaultOne: string) {
 /** The link to a page, carrying the selected day. */
 export function pageHref(page: Page): string {
 	return selectedDay.value ? `${page.href}?${new URLSearchParams({ fecha: selectedDay.value })}` : page.href
+}
+
+/** The link to a day on PDI, for the index's dates (its cards and table): the details are there. */
+export function pdiDayHref(day: string, tipo: Tipo): string {
+	return `${PAGES.pdi.href}?${new URLSearchParams({ fecha: day, proceso: tipo })}`
 }
 
 /**

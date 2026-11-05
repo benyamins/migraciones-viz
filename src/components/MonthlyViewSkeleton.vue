@@ -25,12 +25,21 @@
 				</div>
 			</div>
 			<div class="p-4 sm:p-6">
-				<!-- the two cards: label (20px line), value (32px) and passengers (24px), each bar centered on its line -->
+				<!--
+					the two cards: label (20px line), value (32px) and passengers (24px), then a divider
+					and the next two (20px lines), each bar centered on its line
+				-->
 				<div class="grid max-w-3xl gap-3 md:grid-cols-2 md:gap-4">
 					<div v-for="card in 2" :key="card" class="rounded-lg border border-default p-4">
-						<USkeleton class="h-5 w-44" />
+						<USkeleton class="h-5 w-56" />
 						<USkeleton class="mt-1.5 h-7 w-40" />
 						<USkeleton class="mt-1 mb-0.5 h-5 w-32" />
+						<div class="mt-3 space-y-2 border-t border-default pt-3 pb-0.5">
+							<div v-for="row in 2" :key="row" class="flex justify-between">
+								<USkeleton class="h-4 w-28" />
+								<USkeleton class="h-4 w-12" />
+							</div>
+						</div>
 					</div>
 				</div>
 				<!-- the color legend: its label and items wrap to 3 lines on phones, 2 on md, 1 from lg up -->

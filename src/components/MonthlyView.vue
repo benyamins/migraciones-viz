@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { setSelectedDay } from '../composables/selectedDay'
+import { pdiDayHref, setSelectedDay } from '../composables/selectedDay'
 import { readQuery, writeQuery } from '../composables/urlQuery'
-import { defaultDay, formatMonth, formatWeekdayAndDay, groupByDay } from '../data/days'
+import { defaultDay, formatMonth, formatShortWeekday, formatWeekdayAndDay, groupByDay, nowInChile } from '../data/days'
 import { monthHighlights, monthsOf, summarizeMonth } from '../data/monthly'
 import { windowLabel } from '../data/segments'
 import { isTipo, PROCESOS, type PaxRow, type Tipo } from '../data/types'
@@ -64,7 +64,45 @@ watch(day, (newDay, oldDay) => {
 watch(tipo, value => writeQuery({ proceso: value }))
 
 const days = computed(() => summarizeMonth(byDay.value, month.value, tipo.value))
-const highlights = computed(() => days.value.length ? monthHighlights(days.value) : undefined)
+
+/*
+  The cards: the busiest days and 60 minutes, from today on the current month (see
+  monthHighlights). The time is read once, like "Hoy" on the pickers and in the table: a reload
+  brings it up to date.
+*/
+const now = nowInChile()
+const highlights = computed(() => {
+	if (!days.value.length) return undefined
+	const todayRows = byDay.value.get(now.day)?.filter(row => row.tipo === tipo.value) ?? []
+	return monthHighlights(days.value, now, todayRows)
+})
+
+/**
+ * The table bolds the cards' first 60 minutes, except today's when they're the ones still ahead:
+ * the table shows the whole day's
+ */
+const tablePeakDay = computed(() => {
+	const top = highlights.value?.peaks[0]
+	if (!top) return undefined
+	return days.value.find(summary => summary.day === top.day)?.peak.start === top.start ? top.day : undefined
+})
+
+/** 'desde hoy' or 'del mes', after each card's label */
+const period = computed(() => highlights.value?.fromToday ? 'desde hoy' : 'del mes')
+
+/** A card's first day: 'Sábado 28', or 'Hoy' */
+function longDay(day: string) {
+	if (day === now.day) return 'Hoy'
+	const text = formatWeekdayAndDay(day)
+	return text.charAt(0).toUpperCase() + text.slice(1)
+}
+/** The next two: 'sáb 21', as the table writes it, or 'Hoy' */
+const shortDay = (day: string) => day === now.day ? 'Hoy' : `${formatShortWeekday(day)} ${Number(day.slice(8, 10))}`
+
+// USWDS links: the link color and an underline, thicker on hover
+const LINK = 'rounded-xs text-primary underline decoration-1 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
+// The first item is the card's value; then a divider, and the next two on a row each
+const RANK = ['', 'mt-3 border-t border-default pt-2.5', 'mt-1']
 
 const integer = new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 })
 const monthLong = new Intl.DateTimeFormat('es-CL', { month: 'long', year: 'numeric', timeZone: 'UTC' })
@@ -98,30 +136,58 @@ const tipoTabs = (Object.keys(PROCESOS) as Tipo[]).map(value => ({ label: PROCES
 
 		<div v-if="highlights" class="p-4 sm:p-6">
 			<!--
-				The month's takeaways, in text as USWDS asks of data visualizations: two cards, each
-				with what it is, when, and how many passengers. The table marks the same two in bold.
+				The month's takeaways, in text as USWDS asks of data visualizations: its three busiest
+				days and its three busiest 60 minutes (each a day's hora punta), each a link to that day
+				on PDI. On the current month they count from today, and the labels say so. The first of
+				each is the card's value, and the table marks it in bold; the next two show whether it
+				stands out or is one of several peaks to plan for.
 				A description list (not headings): the table and notes below don't belong to them.
 				Side by side from md: the longest value ("Miércoles 23, 02:30–03:30") is 310px wide.
 			-->
 			<dl class="grid max-w-3xl gap-3 md:grid-cols-2 md:gap-4">
 				<div class="rounded-lg border border-default p-4">
-					<dt class="text-sm font-medium text-toned">Día con más pasajeros del mes</dt>
-					<dd class="mt-1 text-2xl/8 font-semibold text-highlighted first-letter:uppercase">
-						{{ formatWeekdayAndDay(highlights.busiestDay.day) }}
-					</dd>
-					<dd class="text-toned">
-						<span class="font-semibold text-highlighted">{{ integer.format(highlights.busiestDay.total) }}</span> pasajeros
+					<dt class="text-sm font-medium text-toned">Días con más pasajeros {{ period }}</dt>
+					<dd class="mt-1">
+						<ol role="list">
+							<li v-for="(summary, i) in highlights.days" :key="summary.day" :class="RANK[i]">
+								<template v-if="i === 0">
+									<p class="text-2xl/8 font-semibold">
+										<a :href="pdiDayHref(summary.day, tipo)" :class="[LINK, 'underline-offset-4']">{{ longDay(summary.day) }}</a>
+									</p>
+									<p class="text-toned">
+										<span class="font-semibold text-highlighted">{{ integer.format(summary.total) }}</span> pasajeros
+									</p>
+								</template>
+								<p v-else class="flex justify-between gap-4 text-sm">
+									<a :href="pdiDayHref(summary.day, tipo)" :class="[LINK, 'underline-offset-2']">{{ shortDay(summary.day) }}</a>
+									<span class="text-highlighted tabular-nums">{{ integer.format(summary.total) }}<span class="sr-only"> pasajeros</span></span>
+								</p>
+							</li>
+						</ol>
 					</dd>
 				</div>
 				<div class="rounded-lg border border-default p-4">
-					<!-- the busiest 60 minutes in a row: the Hora punta column's, at its highest -->
-					<dt class="text-sm font-medium text-toned">Hora con más pasajeros</dt>
-					<dd class="mt-1 text-2xl/8 font-semibold text-balance text-highlighted first-letter:uppercase">
-						{{ formatWeekdayAndDay(highlights.peakDay.day) }}, {{ windowLabel(highlights.peakDay.peak.start) }}
+					<dt class="text-sm font-medium text-toned">Horas con más pasajeros {{ period }}</dt>
+					<dd v-if="highlights.peaks.length" class="mt-1">
+						<ol role="list">
+							<li v-for="(peak, i) in highlights.peaks" :key="peak.day" :class="RANK[i]">
+								<template v-if="i === 0">
+									<p class="text-2xl/8 font-semibold text-balance">
+										<a :href="pdiDayHref(peak.day, tipo)" :class="[LINK, 'underline-offset-4']">{{ longDay(peak.day) }}, {{ windowLabel(peak.start) }}</a>
+									</p>
+									<p class="text-toned">
+										<span class="font-semibold text-highlighted">{{ integer.format(peak.pax) }}</span> pasajeros
+									</p>
+								</template>
+								<p v-else class="flex justify-between gap-4 text-sm">
+									<a :href="pdiDayHref(peak.day, tipo)" :class="[LINK, 'underline-offset-2']">{{ shortDay(peak.day) }}, {{ windowLabel(peak.start) }}</a>
+									<span class="text-highlighted tabular-nums">{{ integer.format(peak.pax) }}<span class="sr-only"> pasajeros</span></span>
+								</p>
+							</li>
+						</ol>
 					</dd>
-					<dd class="text-toned">
-						<span class="font-semibold text-highlighted">{{ integer.format(highlights.peakDay.peak.pax) }}</span> pasajeros
-					</dd>
+					<!-- on the month's last day, once its last 60 minutes (23:00–24:00) have begun -->
+					<dd v-else class="mt-1 text-toned">Ya no quedan en este mes.</dd>
 				</div>
 			</dl>
 
@@ -140,8 +206,8 @@ const tipoTabs = (Object.keys(PROCESOS) as Tipo[]).map(value => ({ label: PROCES
 				:days="days"
 				:tipo="tipo"
 				:month-label="formatMonth(month)"
-				:busiest-day="highlights.busiestDay.day"
-				:peak-day="highlights.peakDay.day"
+				:busiest-day="highlights.days[0]?.day"
+				:peak-day="tablePeakDay"
 				class="mt-5"
 			/>
 

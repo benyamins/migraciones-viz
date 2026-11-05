@@ -41,12 +41,16 @@ export function sum60(segments: number[], start: number): number {
 	return sum
 }
 
-/** The day's busiest 60 minutes: their first segment and passengers (tenths). On a tie, the earliest. */
-export function busiest60(segments: number[]): { start: number; tenths: number } {
-	let best = { start: 0, tenths: -1 }
-	for (let start = 0; start + SEGMENTS_PER_HOUR <= segments.length; start++) {
+/**
+ * The day's busiest 60 minutes among those that start at segment `from` or later: their first
+ * segment and passengers (tenths). On a tie, the earliest. Undefined when none starts that late
+ * (the last starts at 23:00, segment 138).
+ */
+export function busiest60(segments: number[], from = 0): { start: number; tenths: number } | undefined {
+	let best: { start: number; tenths: number } | undefined
+	for (let start = from; start + SEGMENTS_PER_HOUR <= segments.length; start++) {
 		const sum = sum60(segments, start)
-		if (sum > best.tenths) best = { start, tenths: sum }
+		if (!best || sum > best.tenths) best = { start, tenths: sum }
 	}
 	return best
 }
